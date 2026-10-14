@@ -71,7 +71,7 @@ export function ContentProtection() {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isInput = isInputField(e.target);
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
-      const key = e.key.toLowerCase();
+      const key = e.key ? e.key.toLowerCase() : "";
 
       // F12 or DevTools shortcuts (Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C)
       if (

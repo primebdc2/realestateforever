@@ -438,121 +438,142 @@ function Welcome() {
                   Submit Your Information To Review For Approval
                 </p>
 
-                <form onSubmit={onLeadershipSubmit} className="mt-4 text-left" noValidate>
-                  <div className="grid gap-3.5 sm:grid-cols-2">
-                    <label className="enquiry-field group relative block">
-                      <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
-                        <span>FULL NAME</span>
-                        <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
-                      </span>
-                      <input
-                        name="name"
-                        type="text"
-                        required
-                        className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                      />
-                    </label>
-
-                    <label className="enquiry-field group relative block">
-                      <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
-                        <span>EMAIL</span>
-                        <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
-                      </span>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                      />
-                    </label>
-
-                    <label className="enquiry-field group relative block sm:col-span-2">
-                      <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
-                        <span>CELL PHONE</span>
-                        <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
-                      </span>
-                      <input
-                        name="phone"
-                        type="tel"
-                        required
-                        placeholder="(555) 000-0000"
-                        className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent placeholder:text-muted-foreground/35"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                      />
-                    </label>
-
-                    <label className="enquiry-field group relative block sm:col-span-2">
-                      <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
-                        <span>DIRECT MESSAGE TO LEADERSHIP</span>
-                        <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
-                      </span>
-                      <textarea
-                        name="message"
-                        required
-                        rows={3}
-                        className="peer w-full resize-none border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                      />
-                    </label>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={leadershipSending}
-                    className="leadership-submit-btn group mt-6 relative flex h-14 sm:h-[58px] w-full items-center justify-between rounded-full pl-6 pr-2 sm:pr-2.5 text-[#0d0d0f] transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(181,134,43,0.45),0_0_20px_rgba(212,175,55,0.25)] hover:shadow-[0_8px_36px_rgba(212,175,55,0.75),0_0_30px_rgba(255,215,0,0.5)]"
-                  >
-                    <span className="leadership-btn-shimmer" aria-hidden="true" />
-                    <div className="flex items-center gap-2.5 sm:gap-3">
-                      <span className="relative flex size-2.5">
-                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-black/40 opacity-75" />
-                        <span className="relative inline-flex size-2.5 rounded-full bg-[#0d0d0f]" />
-                      </span>
-                      <span className="font-sans text-[11.5px] sm:text-[13px] font-extrabold uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
-                        {leadershipSending ? "TRANSMITTING..." : "SUBMIT TO LEADERSHIP"}
-                      </span>
+                {leadershipSent === true ? (
+                  <div className="py-6 px-1 sm:px-2 text-center animate-in fade-in zoom-in-95 duration-500">
+                    <div className="relative mx-auto mb-4 flex size-14 sm:size-16 items-center justify-center rounded-full border border-primary/60 bg-gradient-to-b from-primary/25 to-primary/5 text-primary shadow-[0_0_28px_rgba(190,149,67,0.45)]">
+                      <CheckCircle2 className="size-7 sm:size-8 text-primary drop-shadow-[0_0_10px_rgba(255,215,0,0.6)]" />
                     </div>
-                    <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full bg-[#0a0a0c] text-[#f3d078] border border-[#f3d078]/60 shadow-[0_3px_12px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-white group-hover:border-white group-hover:shadow-[0_0_18px_rgba(255,215,0,0.7)]">
-                      <ArrowRight className="size-4.5 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
-                    </span>
-                  </button>
 
-                  {leadershipSent === true && (
-                    <div className="mt-3 flex items-center gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-[12px] text-emerald-400">
-                      <CheckCircle2 className="size-4 shrink-0 text-emerald-400" />
-                      <span>Your message has been sent directly to leadership. We will follow up shortly.</span>
+                    <div className="mx-auto rounded-xl border border-primary/45 bg-gradient-to-b from-black/85 via-black/75 to-black/85 p-5 sm:p-6 shadow-2xl backdrop-blur-md">
+                      <p className="font-display text-sm sm:text-[15px] font-extrabold tracking-[0.25em] text-[#fff0b3] uppercase drop-shadow-[0_0_12px_rgba(255,220,130,0.65)]">
+                        APPLICATION RECEIVED
+                      </p>
+                      <p className="mt-3 text-base sm:text-lg font-bold text-foreground leading-snug tracking-tight">
+                        You Are Now In Review For Approval. Approvals Are Not Guaranteed.
+                      </p>
+                      <p className="mt-3 text-[11.5px] sm:text-[12.5px] text-muted-foreground/90 leading-relaxed border-t border-primary/15 pt-3">
+                        Our executive committee reviews inquiries on a rolling basis. If approved, credentials will be provided directly.
+                      </p>
                     </div>
-                  )}
 
-                  {leadershipSent === false && (
-                    <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-[12px] text-destructive">
-                      Transmission failed. Please try again or email Info@RealEstateForever.com directly.
-                    </div>
-                  )}
-
-                  <div className="mt-3 pt-3 border-t border-primary/15 text-center">
                     <button
                       type="button"
-                      onClick={() => setActiveTab("password")}
-                      className="text-[11px] sm:text-[12px] text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+                      onClick={() => setLeadershipSent(null)}
+                      className="mt-4 text-[11px] sm:text-[12px] uppercase tracking-wider text-muted-foreground/80 hover:text-primary transition-colors underline-offset-4 hover:underline"
                     >
-                      Already have an access code? <span className="text-primary font-semibold">Enter Password →</span>
+                      ← Submit another request
                     </button>
                   </div>
-                </form>
+                ) : (
+                  <form onSubmit={onLeadershipSubmit} className="mt-4 text-left" noValidate>
+                    <div className="grid gap-3.5 sm:grid-cols-2">
+                      <label className="enquiry-field group relative block">
+                        <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
+                          <span>FULL NAME</span>
+                          <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
+                        </span>
+                        <input
+                          name="name"
+                          type="text"
+                          required
+                          className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
+                        />
+                      </label>
+
+                      <label className="enquiry-field group relative block">
+                        <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
+                          <span>EMAIL</span>
+                          <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
+                        </span>
+                        <input
+                          name="email"
+                          type="email"
+                          required
+                          className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
+                        />
+                      </label>
+
+                      <label className="enquiry-field group relative block sm:col-span-2">
+                        <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
+                          <span>CELL PHONE</span>
+                          <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
+                        </span>
+                        <input
+                          name="phone"
+                          type="tel"
+                          required
+                          placeholder="(555) 000-0000"
+                          className="peer w-full border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent placeholder:text-muted-foreground/35"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
+                        />
+                      </label>
+
+                      <label className="enquiry-field group relative block sm:col-span-2">
+                        <span className="mb-1.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors group-focus-within:text-primary">
+                          <span>DIRECT MESSAGE TO LEADERSHIP</span>
+                          <span className="text-primary font-bold text-sm leading-none" aria-label="required">*</span>
+                        </span>
+                        <textarea
+                          name="message"
+                          required
+                          rows={3}
+                          className="peer w-full resize-none border-b border-primary/45 bg-transparent py-2 text-[14px] sm:text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
+                        />
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={leadershipSending}
+                      className="leadership-submit-btn group mt-6 relative flex h-14 sm:h-[58px] w-full items-center justify-between rounded-full pl-6 pr-2 sm:pr-2.5 text-[#0d0d0f] transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(181,134,43,0.45),0_0_20px_rgba(212,175,55,0.25)] hover:shadow-[0_8px_36px_rgba(212,175,55,0.75),0_0_30px_rgba(255,215,0,0.5)]"
+                    >
+                      <span className="leadership-btn-shimmer" aria-hidden="true" />
+                      <div className="flex items-center gap-2.5 sm:gap-3">
+                        <span className="relative flex size-2.5">
+                          <span className="absolute inline-flex size-full animate-ping rounded-full bg-black/40 opacity-75" />
+                          <span className="relative inline-flex size-2.5 rounded-full bg-[#0d0d0f]" />
+                        </span>
+                        <span className="font-sans text-[11.5px] sm:text-[13px] font-extrabold uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
+                          {leadershipSending ? "TRANSMITTING..." : "SUBMIT TO LEADERSHIP"}
+                        </span>
+                      </div>
+                      <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full bg-[#0a0a0c] text-[#f3d078] border border-[#f3d078]/60 shadow-[0_3px_12px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-white group-hover:border-white group-hover:shadow-[0_0_18px_rgba(255,215,0,0.7)]">
+                        <ArrowRight className="size-4.5 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
+                      </span>
+                    </button>
+
+                    {leadershipSent === false && (
+                      <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-[12px] text-destructive">
+                        Transmission failed. Please try again or email Info@RealEstateForever.com directly.
+                      </div>
+                    )}
+                  </form>
+                )}
+
+                <div className="mt-4 pt-3 border-t border-primary/15 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("password")}
+                    className="text-[11px] sm:text-[12px] text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+                  >
+                    You Have The Elite Password? <span className="text-primary font-semibold">Enter It Here For Full Access →</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>

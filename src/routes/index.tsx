@@ -676,8 +676,8 @@ function Homepage() {
             </h2>
           </div>
 
-          <div className="max-w-lg">
-            <p className="text-[13px] sm:text-[14px] font-semibold text-primary tracking-wide">
+          <div className="shrink-0 max-w-full overflow-hidden">
+            <p className="whitespace-nowrap text-[10.5px] min-[380px]:text-[11.5px] sm:text-[13px] md:text-[14px] font-semibold text-primary tracking-tight min-[380px]:tracking-normal sm:tracking-wide">
               Inventory is not guaranteed and is subject to hourly changes
             </p>
           </div>
