@@ -435,7 +435,7 @@ function Welcome() {
                   DIRECT ACCESS TO LEADERSHIP
                 </p>
                 <p className="mt-1 text-[11px] sm:text-[12px] text-muted-foreground">
-                  Submit your criteria below for invitation & private access.
+                  Submit Your Information To Review For Approval
                 </p>
 
                 <form onSubmit={onLeadershipSubmit} className="mt-4 text-left" noValidate>
@@ -513,14 +513,20 @@ function Welcome() {
                   <button
                     type="submit"
                     disabled={leadershipSending}
-                    className="leadership-submit-btn group mt-5 relative flex h-13 sm:h-14 w-full items-center justify-between rounded-lg px-6 text-[#0d0d0f] transition-all duration-300 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="leadership-submit-btn group mt-6 relative flex h-14 sm:h-[58px] w-full items-center justify-between rounded-full pl-6 pr-2 sm:pr-2.5 text-[#0d0d0f] transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(181,134,43,0.45),0_0_20px_rgba(212,175,55,0.25)] hover:shadow-[0_8px_36px_rgba(212,175,55,0.75),0_0_30px_rgba(255,215,0,0.5)]"
                   >
                     <span className="leadership-btn-shimmer" aria-hidden="true" />
-                    <span className="font-sans text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.2em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
-                      {leadershipSending ? "SENDING..." : "SUBMIT TO LEADERSHIP"}
-                    </span>
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-black text-[#f3d078] border border-[#f3d078]/60 shadow-[0_2px_8px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-white group-hover:border-white">
-                      <ArrowRight className="size-4 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
+                    <div className="flex items-center gap-2.5 sm:gap-3">
+                      <span className="relative flex size-2.5">
+                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-black/40 opacity-75" />
+                        <span className="relative inline-flex size-2.5 rounded-full bg-[#0d0d0f]" />
+                      </span>
+                      <span className="font-sans text-[11.5px] sm:text-[13px] font-extrabold uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
+                        {leadershipSending ? "TRANSMITTING..." : "SUBMIT TO LEADERSHIP"}
+                      </span>
+                    </div>
+                    <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full bg-[#0a0a0c] text-[#f3d078] border border-[#f3d078]/60 shadow-[0_3px_12px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-white group-hover:border-white group-hover:shadow-[0_0_18px_rgba(255,215,0,0.7)]">
+                      <ArrowRight className="size-4.5 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </button>
 

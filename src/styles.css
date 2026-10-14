@@ -249,33 +249,35 @@
 /* Executive Leadership Submit Button */
 .leadership-submit-btn {
   position: relative;
-  background: linear-gradient(180deg, #fce28b 0%, #d4a745 42%, #ab8027 100%);
-  border: 1px solid #ffd700;
+  background: linear-gradient(135deg, #ffe08a 0%, #d4a745 45%, #b28224 85%, #926715 100%);
+  border: 1px solid rgba(255, 240, 180, 0.75);
   box-shadow:
-    0 4px 18px rgba(181, 134, 43, 0.45),
-    0 10px 32px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+    0 4px 20px rgba(181, 134, 43, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .leadership-submit-btn:hover {
-  background: linear-gradient(180deg, #fff0a8 0%, #e0b44f 42%, #ba8a2c 100%);
+  background: linear-gradient(135deg, #fff2b2 0%, #e5b955 45%, #c59332 85%, #a8791e 100%);
   border-color: #ffffff;
   box-shadow:
-    0 6px 26px rgba(212, 175, 55, 0.65),
-    0 16px 45px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+    0 6px 28px rgba(212, 175, 55, 0.65),
+    0 16px 44px rgba(0, 0, 0, 0.85),
+    0 0 24px rgba(255, 215, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 1),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
 }
 
 .leadership-submit-btn:active {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.99);
   box-shadow:
-    0 2px 10px rgba(181, 134, 43, 0.4),
-    inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    0 2px 12px rgba(181, 134, 43, 0.4),
+    inset 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 /* Shimmer beam across leadership button */
