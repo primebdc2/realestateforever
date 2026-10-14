@@ -21,7 +21,7 @@ import {
   Video,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { getComingSoonContent } from "@/lib/gate.functions";
 import { getVisitToken } from "@/lib/visit-token";
 import { sendFormEmail } from "@/lib/mail.functions";
@@ -198,10 +198,63 @@ export const Route = createFileRoute("/")({
 
 function Homepage() {
   const content = Route.useLoaderData();
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
   const [search, setSearch] = useState("");
   const [inventoryTab, setInventoryTab] = useState<"all" | "properties" | "vehicles">("all");
   const [vehicleCategory, setVehicleCategory] = useState<"all" | VehicleCategory>("all");
   const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
+
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    // Explicitly enforce muted properties on the DOM element so browsers allow autoplay
+    video.defaultMuted = true;
+    video.muted = true;
+
+    const playVideo = () => {
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          video.defaultMuted = true;
+          video.muted = true;
+          void video.play().catch(() => undefined);
+        });
+      }
+    };
+
+    playVideo();
+
+    video.addEventListener("loadedmetadata", playVideo);
+    video.addEventListener("loadeddata", playVideo);
+    video.addEventListener("canplay", playVideo);
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        playVideo();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", playVideo);
+
+    const handleInteraction = () => {
+      playVideo();
+    };
+    window.addEventListener("pointerdown", handleInteraction, { once: true, passive: true });
+    window.addEventListener("touchstart", handleInteraction, { once: true, passive: true });
+    window.addEventListener("scroll", handleInteraction, { once: true, passive: true });
+
+    return () => {
+      video.removeEventListener("loadedmetadata", playVideo);
+      video.removeEventListener("loadeddata", playVideo);
+      video.removeEventListener("canplay", playVideo);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("focus", playVideo);
+      window.removeEventListener("pointerdown", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+      window.removeEventListener("scroll", handleInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -392,6 +445,7 @@ function Homepage() {
         className="relative h-[48vh] sm:h-[52vh] md:h-[calc(100dvh-var(--site-header-height,81px))] w-full overflow-hidden border-t border-border bg-black"
       >
         <video
+          ref={heroVideoRef}
           poster={homeMainPoster.url}
           autoPlay
           muted
