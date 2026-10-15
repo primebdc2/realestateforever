@@ -17,7 +17,7 @@ const IDLE_LIMIT_MS = 20 * 60 * 1000; // 20 minutes without activity locks the s
 const ABSOLUTE_LIMIT_MS = 2 * 60 * 60 * 1000; // 2 hours maximum per session
 
 const DEFAULT_SESSION_SECRET = "c9b0e27a69f4d7b29a8f4c2e6d9b0e27a69f4d7b29a8f4c2e6d9b0e27a69f4d7";
-const DEFAULT_ACCESS_PASSWORD = "1111";
+const DEFAULT_ACCESS_PASSWORD = "777";
 
 function getExpectedPassword(): string {
   return process.env["SITE_ACCESS_PASSWORD"] || DEFAULT_ACCESS_PASSWORD;
