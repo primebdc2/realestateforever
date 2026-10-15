@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as Home2RouteImport } from './routes/home-2'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -20,11 +19,6 @@ import { Route as WelcomeRouteImport } from './routes/welcome'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Home2Route = Home2RouteImport.update({
-  id: '/home-2',
-  path: '/home-2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -55,7 +49,6 @@ const WelcomeRoute = WelcomeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/home-2': typeof Home2Route
   '/inventory': typeof InventoryRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -64,7 +57,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/home-2': typeof Home2Route
   '/inventory': typeof InventoryRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -74,7 +66,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/home-2': typeof Home2Route
   '/inventory': typeof InventoryRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -83,27 +74,12 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/home-2'
-    | '/inventory'
-    | '/privacy'
-    | '/terms'
-    | '/unlock'
-    | '/welcome'
+  fullPaths: '/' | '/inventory' | '/privacy' | '/terms' | '/unlock' | '/welcome'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/home-2'
-    | '/inventory'
-    | '/privacy'
-    | '/terms'
-    | '/unlock'
-    | '/welcome'
+  to: '/' | '/inventory' | '/privacy' | '/terms' | '/unlock' | '/welcome'
   id:
     | '__root__'
     | '/'
-    | '/home-2'
     | '/inventory'
     | '/privacy'
     | '/terms'
@@ -113,7 +89,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  Home2Route: typeof Home2Route
   InventoryRoute: typeof InventoryRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
@@ -128,13 +103,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-2': {
-      id: '/home-2'
-      path: '/home-2'
-      fullPath: '/home-2'
-      preLoaderRoute: typeof Home2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -177,7 +145,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  Home2Route: Home2Route,
   InventoryRoute: InventoryRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
