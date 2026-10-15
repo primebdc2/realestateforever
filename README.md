@@ -1,10 +1,10 @@
-# Graceful Grid Homes
+# Real Estate Forever
 
-Elegant real estate site with Grids showcasing the site. elegant colors and feel
+Luxury real estate & vehicle showcase platform featuring interactive property portfolios, dynamic map views, and private access unlock flow.
 
-This project was built with [Lovable](https://lovable.dev).
+- **Production Domain**: [realestateforever.com](https://realestateforever.com)
+- **Framework**: TanStack Start / React 19 / Nitro
 
-**Live app**: https://elegant-grids-showcase.lovable.app
 
 ## Build with Lovable
 
