@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const DEFAULT_CLIENT_EMAIL = "info@realestateforever.com";
-const CHATBOT_DESTINATION_EMAIL = "ullashsoftvence@gmail.com";
+const CHATBOT_DESTINATION_EMAIL = "info@realestateforever.com";
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_mail/gmail/v1";
 const LOGO_CID = "real-estate-forever-logo";
 const SENDER_NAME = "Real Estate Forever";
@@ -156,7 +156,45 @@ export const sendFormEmail = createServerFn({ method: "POST" })
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-    // 1. If Resend API Key is configured (ideal for Vercel deployment)
+    const smtpUser = process.env["SMTP_USER"] || "info@realestateforever.com";
+    const smtpPass = process.env["SMTP_PASS"] || "+cEVXqTP_1Dp2Zv2";
+    const smtpHost = process.env["SMTP_HOST"] || "smtp.office365.com";
+    const smtpPort = Number(process.env["SMTP_PORT"] || 587);
+
+    // 1. Primary: Direct GoDaddy / Office 365 SMTP Transport
+    if (smtpUser && smtpPass) {
+      try {
+        const nodemailer = await import("nodemailer");
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: false, // port 587 uses STARTTLS
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+          tls: {
+            ciphers: "SSLv3",
+            rejectUnauthorized: false,
+          },
+        });
+
+        await transporter.sendMail({
+          from: `"${SENDER_NAME}" <${smtpUser}>`,
+          to: TO,
+          replyTo: data.email || undefined,
+          subject: subjectLine,
+          html: html,
+        });
+
+        console.log(`[mail] Inquiry email successfully delivered via GoDaddy SMTP to ${TO}`);
+        return { ok: true, error: "" };
+      } catch (smtpErr) {
+        console.error("[mail] GoDaddy SMTP failed, falling back to secondary transport:", smtpErr);
+      }
+    }
+
+    // 2. Secondary fallback: If Resend API Key is configured
     if (resendKey) {
       try {
         const res = await fetch("https://api.resend.com/emails", {
