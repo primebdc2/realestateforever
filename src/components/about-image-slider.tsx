@@ -13,6 +13,16 @@ const SLIDES = [
     title: "Executive Reception",
   },
   {
+    src: aboutOfficeSlide5,
+    alt: "RealEstateForever.com sunset grand reception and ocean panorama",
+    title: "Sunset Grand Reception",
+  },
+  {
+    src: aboutOfficeSlide4,
+    alt: "RealEstateForever.com twilight oceanfront advisory suite",
+    title: "Twilight Advisory Suite",
+  },
+  {
     src: aboutOfficeSlide2,
     alt: "RealEstateForever.com coastal sunset lounge and private terrace",
     title: "Coastal Sunset Lounge",
@@ -21,16 +31,6 @@ const SLIDES = [
     src: aboutOfficeSlide3,
     alt: "RealEstateForever.com panoramic coastal lobby",
     title: "Panoramic Coastal Lobby",
-  },
-  {
-    src: aboutOfficeSlide4,
-    alt: "RealEstateForever.com twilight oceanfront advisory suite",
-    title: "Twilight Advisory Suite",
-  },
-  {
-    src: aboutOfficeSlide5,
-    alt: "RealEstateForever.com sunset grand reception and ocean panorama",
-    title: "Sunset Grand Reception",
   },
 ];
 
@@ -117,11 +117,10 @@ export function AboutImageSlider() {
             <div
               key={index}
               aria-hidden={!isActive}
-              className={`absolute inset-0 size-full transition-all duration-500 ease-in-out ${
-                isActive
+              className={`absolute inset-0 size-full transition-all duration-500 ease-in-out ${isActive
                   ? "opacity-100 scale-100 z-10 pointer-events-auto"
                   : "opacity-0 scale-105 z-0 pointer-events-none"
-              }`}
+                }`}
             >
               <img
                 src={slide.src}
@@ -192,11 +191,10 @@ export function AboutImageSlider() {
                 goToSlide(index);
               }}
               aria-label={`Go to slide ${index + 1}`}
-              className={`h-1.5 transition-all duration-300 rounded-full focus:outline-none ${
-                isActive
+              className={`h-1.5 transition-all duration-300 rounded-full focus:outline-none ${isActive
                   ? "w-6 sm:w-7 bg-primary shadow-[0_0_10px_rgba(190,149,67,0.85)]"
                   : "w-1.5 sm:w-2 bg-white/35 hover:bg-white/70"
-              }`}
+                }`}
             />
           );
         })}

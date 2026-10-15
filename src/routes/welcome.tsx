@@ -16,7 +16,7 @@ import { clearVisitToken, setVisitToken } from "@/lib/visit-token";
 
 export const Route = createFileRoute("/welcome")({
   head: () => {
-    const ogImage = `https://realestateforever.com${ogImageAsset.url}`;
+    const ogImage = "https://realestateforever.com/og-image.jpg";
     return {
       meta: [
         { title: "Real Estate Investments & Development | RealEstateForever.com" },
@@ -25,6 +25,9 @@ export const Route = createFileRoute("/welcome")({
         { property: "og:title", content: "Real Estate Investments & Development" },
         { property: "og:description", content: "RealEstateForever.com" },
         { property: "og:image", content: ogImage },
+        { property: "og:image:width", content: "1024" },
+        { property: "og:image:height", content: "576" },
+        { property: "og:image:type", content: "image/jpeg" },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: "Real Estate Investments & Development" },

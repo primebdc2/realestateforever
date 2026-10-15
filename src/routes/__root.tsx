@@ -86,10 +86,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "RealEstateForever.com" },
       { property: "og:title", content: "Real Estate Investments & Development" },
       { property: "og:description", content: "RealEstateForever.com" },
+      { property: "og:image", content: "https://realestateforever.com/og-image.jpg" },
+      { property: "og:image:width", content: "1024" },
+      { property: "og:image:height", content: "576" },
+      { property: "og:image:type", content: "image/jpeg" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Real Estate Investments & Development" },
       { name: "twitter:description", content: "RealEstateForever.com" },
+      { name: "twitter:image", content: "https://realestateforever.com/og-image.jpg" },
     ],
     links: [
       {
@@ -97,6 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/og-image.jpg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" },
