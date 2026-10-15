@@ -13,16 +13,6 @@ const SLIDES = [
     title: "Executive Reception",
   },
   {
-    src: aboutOfficeSlide5,
-    alt: "RealEstateForever.com sunset grand reception and ocean panorama",
-    title: "Sunset Grand Reception",
-  },
-  {
-    src: aboutOfficeSlide4,
-    alt: "RealEstateForever.com twilight oceanfront advisory suite",
-    title: "Twilight Advisory Suite",
-  },
-  {
     src: aboutOfficeSlide2,
     alt: "RealEstateForever.com coastal sunset lounge and private terrace",
     title: "Coastal Sunset Lounge",
@@ -31,6 +21,16 @@ const SLIDES = [
     src: aboutOfficeSlide3,
     alt: "RealEstateForever.com panoramic coastal lobby",
     title: "Panoramic Coastal Lobby",
+  },
+  {
+    src: aboutOfficeSlide4,
+    alt: "RealEstateForever.com twilight oceanfront advisory suite",
+    title: "Twilight Advisory Suite",
+  },
+  {
+    src: aboutOfficeSlide5,
+    alt: "RealEstateForever.com sunset grand reception and ocean panorama",
+    title: "Sunset Grand Reception",
   },
 ];
 
