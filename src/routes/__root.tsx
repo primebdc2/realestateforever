@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LuxuryConcierge } from "../components/luxury-concierge";
 import { ContentProtection } from "../components/content-protection";
+import { LuxMotionManager } from "../components/lux-motion-manager";
 
 function NotFoundComponent() {
   return (
@@ -137,6 +138,7 @@ function RootComponent() {
       <Outlet />
       <ContentProtection />
       <LuxuryConcierge />
+      <LuxMotionManager />
     </QueryClientProvider>
   );
 }

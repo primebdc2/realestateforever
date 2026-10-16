@@ -252,7 +252,7 @@ function InventoryPage() {
           {expanded && <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-primary/15 pt-3"><label className="flex items-center gap-2 text-[12px] text-muted-foreground">State <select aria-label="State" value={state} onChange={(e) => setState(e.target.value)} className={selectClass}><option value="all">All states</option>{states.map((s) => <option key={s} value={s}>{s}</option>)}</select></label><Button type="button" variant="ghost" onClick={reset} className="text-primary hover:bg-card hover:text-primary">Clear filters <X className="size-4" /></Button></div>}
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-primary/15 pt-3 text-[12px] text-muted-foreground"><span className="flex items-center gap-3">{filtered.length} of {items.length} listings{hasFilters && <button type="button" onClick={reset} className="flex items-center gap-1 text-primary underline-offset-4 outline-none hover:underline focus-visible:underline" aria-label="Clear all filters"><X className="size-3.5" /> Clear filters</button>}</span><label className="flex items-center gap-2">Sort <select aria-label="Sort listings" value={sort} onChange={(e) => setSort(e.target.value)} className="bg-background text-[12px] text-foreground outline-none"><option value="latest">Original order</option><option value="state">State (A-Z)</option></select></label></div>
         </div>
-        <div className="min-h-0 flex-1 lg:overflow-y-auto" aria-label="Listings">
+        <div id="inventory-listings-scroll" className="min-h-0 flex-1 lg:overflow-y-auto" aria-label="Listings">
           {filtered.length === 0 && <div className="p-8 text-center"><p className="font-display text-2xl">No matching listings</p><Button variant="outline" onClick={reset} className="mt-4 rounded-none border-primary text-primary hover:bg-card hover:text-primary">Clear filters</Button></div>}
           <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-1 xl:grid-cols-2">
             {filtered.map((item) => item.kind === "property" ? (() => {
@@ -266,10 +266,11 @@ function InventoryPage() {
               const videoNumber = isVideo ? currentIndex - totalPhotos + 1 : 0;
 
               return (
-                <article key={item.key} ref={(el) => { if (el) cardRefs.current.set(item.key, el); else cardRefs.current.delete(item.key); }} className={`group relative min-w-0 cursor-pointer rounded-md overflow-hidden transition-all duration-300 ${selectedKey === item.key ? "border border-primary bg-primary/15 shadow-[0_0_24px_rgba(190,149,67,0.35)]" : "luxury-card-depth"}`} role="button" tabIndex={0} aria-label={`Select ${item.listing.city}, ${item.listing.state} property`} aria-pressed={selectedKey === item.key} onClick={() => setSelectedKey(item.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedKey(item.key); } }}>
+                <article key={item.key} ref={(el) => { if (el) cardRefs.current.set(item.key, el); else cardRefs.current.delete(item.key); }} data-lux-card className={`group relative min-w-0 cursor-pointer rounded-md overflow-hidden ${selectedKey === item.key ? "border border-primary bg-primary/15 shadow-[0_0_24px_rgba(190,149,67,0.35)]" : "luxury-card-depth"}`} role="button" tabIndex={0} aria-label={`Select ${item.listing.city}, ${item.listing.state} property`} aria-pressed={selectedKey === item.key} onClick={() => setSelectedKey(item.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedKey(item.key); } }}>
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
                   <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-black group/img">
+                    <span className="lux-curtain" aria-hidden="true" />
                     {isVideo ? (
                       <video
                         key={currentMedia.url}
@@ -338,7 +339,8 @@ function InventoryPage() {
                 <article
                   key={item.key}
                   ref={(el) => { if (el) cardRefs.current.set(item.key, el); else cardRefs.current.delete(item.key); }}
-                  className={`group relative min-w-0 cursor-pointer rounded-md overflow-hidden transition-all duration-300 ${selectedKey === item.key ? "border border-primary bg-primary/15 shadow-[0_0_24px_rgba(190,149,67,0.35)]" : "luxury-card-depth"}`}
+                  data-lux-card
+                  className={`group relative min-w-0 cursor-pointer rounded-md overflow-hidden ${selectedKey === item.key ? "border border-primary bg-primary/15 shadow-[0_0_24px_rgba(190,149,67,0.35)]" : "luxury-card-depth"}`}
                   role="button"
                   tabIndex={0}
                   aria-label={`Select ${item.vehicle.title}`}
@@ -349,6 +351,7 @@ function InventoryPage() {
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
                   <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-muted group/img">
+                    <span className="lux-curtain" aria-hidden="true" />
                     {currentMedia?.url ? (
                       <img
                         src={currentMedia.url}

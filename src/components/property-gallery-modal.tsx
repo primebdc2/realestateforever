@@ -144,11 +144,10 @@ export function PropertyGalleryModal({ listing, initialIndex = 0, onClose }: Pro
               type="button"
               onClick={() => setCurrentIndex(idx)}
               aria-label={`View ${item.label}`}
-              className={`relative size-14 sm:size-18 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
-                currentIndex === idx
-                  ? "border-primary shadow-lg shadow-primary/40 scale-105"
-                  : "border-transparent opacity-60 hover:opacity-100"
-              }`}
+              className={`relative size-14 sm:size-18 shrink-0 overflow-hidden rounded-md border-2 transition-all ${currentIndex === idx
+                ? "border-primary shadow-lg shadow-primary/40 scale-105"
+                : "border-transparent opacity-60 hover:opacity-100"
+                }`}
             >
               {item.type === "video" ? (
                 <div className="flex size-full flex-col items-center justify-center bg-black/90 p-1 text-primary">

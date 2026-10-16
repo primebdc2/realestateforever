@@ -304,8 +304,8 @@ function Homepage() {
     inventoryTab === "all"
       ? visibleListings.length + visibleVehicles.length
       : inventoryTab === "properties"
-      ? visibleListings.length
-      : visibleVehicles.length;
+        ? visibleListings.length
+        : visibleVehicles.length;
 
   const updateSearch = (value: string) => {
     setSearch(value);
@@ -751,7 +751,8 @@ function Homepage() {
               return (
                 <article
                   key={listing.id}
-                  className="reveal-up group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden transition-all duration-300 hover:border-transparent"
+                  data-lux-card
+                  className="group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden hover:border-transparent"
                 >
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
@@ -760,6 +761,7 @@ function Homepage() {
                     onClick={() => openGallery(listing, currentIndex)}
                     title="Click to view full photo and video gallery"
                   >
+                    <span className="lux-curtain" aria-hidden="true" />
                     {isVideo ? (
                       <div className="relative size-full bg-black flex items-center justify-center">
                         <video
@@ -855,7 +857,8 @@ function Homepage() {
               return (
                 <article
                   key={v.id}
-                  className="reveal-up group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden transition-all duration-300 hover:border-transparent"
+                  data-lux-card
+                  className="group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden hover:border-transparent"
                 >
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
@@ -864,6 +867,7 @@ function Homepage() {
                     onClick={() => openVehicleGallery(v, currentIndex)}
                     title="Click to view full photo gallery"
                   >
+                    <span className="lux-curtain" aria-hidden="true" />
                     {currentMedia?.url ? (
                       <img
                         src={currentMedia.url}
@@ -1008,126 +1012,128 @@ function Homepage() {
         className="scroll-mt-20 border-t border-border bg-card/25 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32"
       >
         <div className="mx-auto max-w-[1600px]">
-          <div className="grid gap-10 sm:gap-16 lg:grid-cols-12 lg:gap-20">
-            <div className="lg:col-span-5">
-              <div className="mb-5 flex items-center gap-3 sm:mb-6 sm:gap-4">
-                <span className="h-px w-8 bg-primary sm:w-10" />
-                <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">CONFIDENTIAL ACCESS</p>
-              </div>
-              <h2 className="max-w-2xl text-balance font-display text-[2.2rem] font-medium leading-[1.04] sm:text-5xl sm:leading-[0.98] md:text-6xl xl:text-6xl">
-                <span className="block text-foreground drop-shadow-sm">AN OPPORTUNITY OF A LIFETIME.</span>
-                <span className="block font-normal italic gold-text-sheen mt-1 drop-shadow-[0_2px_12px_rgba(190,149,67,0.3)]">TAKE ADVANTAGES OF IT.</span>
-              </h2>
-              <p className="mt-5 max-w-lg text-pretty text-[15px] leading-7 text-muted-foreground/90 sm:mt-8 sm:text-base">
-                Website is for internal leadership use only. All information is strictly confidential, and is not
-                guaranteed to be available.
-              </p>
-              <div className="mt-8 border-t border-primary/20 pt-6 sm:mt-12 sm:pt-7">
-                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary/85">EMAIL US</p>
-                <a
-                  href={`mailto:${content.email}`}
-                  className="mt-3 inline-flex items-center gap-3 break-all font-display text-lg tracking-wide text-foreground transition-all duration-300 hover:text-primary hover:translate-x-1 sm:text-2xl"
-                >
-                  <Send className="size-4 shrink-0 text-primary drop-shadow-[0_0_8px_rgba(190,149,67,0.5)]" />
-                  {content.email}
-                </a>
-              </div>
-            </div>
-
-            <form
-              onSubmit={sendEnquiry}
-              className="enquiry-form reveal-up rounded-xl luxury-glass-panel p-6 shadow-2xl transition-[border-color,box-shadow,transform] duration-500 focus-within:-translate-y-1 focus-within:border-primary/50 focus-within:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(190,149,67,0.2)] sm:p-8 md:p-10 lg:col-span-6 lg:col-start-7"
-            >
-              <div className="grid gap-5 sm:grid-cols-2 sm:gap-7">
-                <label className="enquiry-field group relative block">
-                  <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
-                    <span>FULL NAME</span>
-                    <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
-                  </span>
-                  <input
-                    name="name"
-                    required
-                    className="peer w-full border-b border-primary/45 bg-transparent py-3 text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                  />
-                </label>
-                <label className="enquiry-field group relative block">
-                  <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
-                    <span>EMAIL</span>
-                    <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
-                  </span>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    className="peer w-full border-b border-primary/45 bg-transparent py-3 text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                  />
-                </label>
-                <label className="enquiry-field group relative block sm:col-span-2">
-                  <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
-                    <span>CELL PHONE</span>
-                    <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
-                  </span>
-                  <input
-                    name="subject"
-                    type="tel"
-                    required
-                    placeholder="(555) 000-0000"
-                    className="peer w-full border-b border-primary/45 bg-transparent py-3 text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent placeholder:text-muted-foreground/40"
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                  />
-                </label>
-                <label className="enquiry-field group relative block sm:col-span-2">
-                  <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
-                    <span>DIRECT MESSAGE TO LEADERSHIP</span>
-                    <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
-                  </span>
-                  <textarea
-                    name="message"
-                    required
-                    rows={4}
-                    className="peer w-full resize-none border-b border-primary/45 bg-transparent py-3 text-base text-foreground outline-none transition-colors duration-300 focus:border-transparent"
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary/80 via-primary to-primary/80 transition-transform duration-500 ease-out peer-focus:scale-x-100"
-                  />
-                </label>
-              </div>
-              <button
-                type="submit"
-                disabled={sending === "enquiry"}
-                className="leadership-submit-btn group mt-9 relative flex h-16 w-full items-center justify-between rounded-lg px-6 sm:px-8 text-[#0d0d0f] transition-all duration-300 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                <span className="leadership-btn-shimmer" aria-hidden="true" />
-                <span className="font-sans text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.22em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
-                  {sending === "enquiry" ? "SENDING..." : "SUBMIT TO LEADERSHIP"}
-                </span>
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-[#f3d078] border border-[#f3d078]/60 shadow-[0_2px_8px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-white group-hover:border-white group-hover:shadow-[0_0_16px_rgba(255,215,0,0.7)]">
-                  <ArrowRight className="size-5 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </button>
-              {sentMsg?.form === "enquiry" && (
-                <p
-                  role="status"
-                  className={`mt-4 text-center text-sm ${sentMsg.ok ? "text-primary" : "text-destructive"}`}
-                >
-                  {sentMsg.ok
-                    ? "Email has been sent successfully."
-                    : "Sorry, the email could not be sent. Please try again."}
+          <div className="gold-pulse-section rounded-2xl bg-gradient-to-b from-[#15151a]/95 via-[#0d0d10]/98 to-[#131317]/95 p-6 sm:p-10 md:p-12 lg:p-16 backdrop-blur-xl">
+            <div className="grid gap-10 sm:gap-16 lg:grid-cols-12 lg:gap-20">
+              <div className="lg:col-span-5">
+                <div className="mb-5 flex items-center gap-3 sm:mb-6 sm:gap-4">
+                  <span className="h-px w-8 bg-primary sm:w-10" />
+                  <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">CONFIDENTIAL ACCESS</p>
+                </div>
+                <h2 className="max-w-2xl text-balance font-display text-[2.2rem] font-medium leading-[1.04] sm:text-5xl sm:leading-[0.98] md:text-6xl xl:text-6xl">
+                  <span className="block text-foreground drop-shadow-sm">AN OPPORTUNITY OF A LIFETIME.</span>
+                  <span className="block font-normal italic gold-text-sheen mt-1 drop-shadow-[0_2px_12px_rgba(190,149,67,0.3)]">TAKE ADVANTAGES OF IT.</span>
+                </h2>
+                <p className="mt-5 max-w-lg text-pretty text-[15px] leading-7 text-muted-foreground/90 sm:mt-8 sm:text-base">
+                  Website is for internal leadership use only. All information is strictly confidential, and is not
+                  guaranteed to be available.
                 </p>
-              )}
-            </form>
+                <div className="mt-8 border-t border-primary/20 pt-6 sm:mt-12 sm:pt-7">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary/85">EMAIL US</p>
+                  <a
+                    href={`mailto:${content.email}`}
+                    className="mt-3 inline-flex items-center gap-3 break-all font-display text-lg tracking-wide text-foreground transition-all duration-300 hover:text-primary hover:translate-x-1 sm:text-2xl"
+                  >
+                    <Send className="size-4 shrink-0 text-primary drop-shadow-[0_0_8px_rgba(190,149,67,0.5)]" />
+                    {content.email}
+                  </a>
+                </div>
+              </div>
+
+              <form
+                onSubmit={sendEnquiry}
+                className="enquiry-form gold-pulse-form reveal-up rounded-xl p-6 shadow-2xl transition-[border-color,box-shadow,transform] duration-500 focus-within:-translate-y-1 sm:p-8 md:p-10 lg:col-span-6 lg:col-start-7"
+              >
+                <div className="grid gap-5 sm:grid-cols-2 sm:gap-7">
+                  <label className="enquiry-field group relative block">
+                    <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
+                      <span>FULL NAME</span>
+                      <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
+                    </span>
+                    <input
+                      name="name"
+                      required
+                      className="peer w-full border-b border-primary/45 bg-white/[0.02] px-3 py-3 text-base text-foreground outline-none transition-all duration-300 focus:border-primary focus:bg-white/[0.04]"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary via-[#ffd700] to-primary transition-transform duration-500 ease-out peer-focus:scale-x-100 shadow-[0_0_8px_rgba(255,215,0,0.5)]"
+                    />
+                  </label>
+                  <label className="enquiry-field group relative block">
+                    <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
+                      <span>EMAIL</span>
+                      <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
+                    </span>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      className="peer w-full border-b border-primary/45 bg-white/[0.02] px-3 py-3 text-base text-foreground outline-none transition-all duration-300 focus:border-primary focus:bg-white/[0.04]"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary via-[#ffd700] to-primary transition-transform duration-500 ease-out peer-focus:scale-x-100 shadow-[0_0_8px_rgba(255,215,0,0.5)]"
+                    />
+                  </label>
+                  <label className="enquiry-field group relative block sm:col-span-2">
+                    <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
+                      <span>CELL PHONE</span>
+                      <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
+                    </span>
+                    <input
+                      name="subject"
+                      type="tel"
+                      required
+                      placeholder="(555) 000-0000"
+                      className="peer w-full border-b border-primary/45 bg-white/[0.02] px-3 py-3 text-base text-foreground outline-none transition-all duration-300 focus:border-primary focus:bg-white/[0.04] placeholder:text-muted-foreground/40"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary via-[#ffd700] to-primary transition-transform duration-500 ease-out peer-focus:scale-x-100 shadow-[0_0_8px_rgba(255,215,0,0.5)]"
+                    />
+                  </label>
+                  <label className="enquiry-field group relative block sm:col-span-2">
+                    <span className="mb-3 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-focus-within:text-primary">
+                      <span>DIRECT MESSAGE TO LEADERSHIP</span>
+                      <span className="text-primary font-bold text-sm leading-none select-none" aria-label="required">*</span>
+                    </span>
+                    <textarea
+                      name="message"
+                      required
+                      rows={4}
+                      className="peer w-full resize-none border-b border-primary/45 bg-white/[0.02] px-3 py-3 text-base text-foreground outline-none transition-all duration-300 focus:border-primary focus:bg-white/[0.04]"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-primary via-[#ffd700] to-primary transition-transform duration-500 ease-out peer-focus:scale-x-100 shadow-[0_0_8px_rgba(255,215,0,0.5)]"
+                    />
+                  </label>
+                </div>
+                <button
+                  type="submit"
+                  disabled={sending === "enquiry"}
+                  className="leadership-submit-btn group mt-9 relative flex h-16 w-full items-center justify-between rounded-lg px-6 sm:px-8 text-[#0d0d0f] transition-all duration-300 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <span className="leadership-btn-shimmer" aria-hidden="true" />
+                  <span className="font-sans text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.22em] text-[#0d0d0f] drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
+                    {sending === "enquiry" ? "SENDING..." : "SUBMIT TO LEADERSHIP"}
+                  </span>
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-[#f3d078] border border-[#f3d078]/60 shadow-[0_2px_8px_rgba(0,0,0,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-white group-hover:border-white group-hover:shadow-[0_0_16px_rgba(255,215,0,0.7)]">
+                    <ArrowRight className="size-5 stroke-[2.75] transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </button>
+                {sentMsg?.form === "enquiry" && (
+                  <p
+                    role="status"
+                    className={`mt-4 text-center text-sm ${sentMsg.ok ? "text-primary" : "text-destructive"}`}
+                  >
+                    {sentMsg.ok
+                      ? "Email has been sent successfully."
+                      : "Sorry, the email could not be sent. Please try again."}
+                  </p>
+                )}
+              </form>
+            </div>
           </div>
         </div>
       </section>

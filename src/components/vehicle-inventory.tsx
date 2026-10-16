@@ -131,7 +131,8 @@ export function VehicleInventory() {
           return (
             <article
               key={v.id}
-              className="reveal-up group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden transition-all duration-300 hover:border-transparent"
+              data-lux-card
+              className="group relative min-w-0 flex flex-col rounded-md luxury-card-depth overflow-hidden hover:border-transparent"
             >
               <span className="gold-box-border" aria-hidden="true" />
               <span className="gold-pulse-line" aria-hidden="true" />
@@ -140,6 +141,7 @@ export function VehicleInventory() {
                 onClick={() => openVehicleGallery(v, currentIndex)}
                 title="Click to view full photo gallery"
               >
+                <span className="lux-curtain" aria-hidden="true" />
                 {currentMedia?.url ? (
                   <img
                     src={currentMedia.url}
