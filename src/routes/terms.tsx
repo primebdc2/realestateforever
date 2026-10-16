@@ -19,9 +19,9 @@ export const Route = createFileRoute("/terms")({
   },
   head: () => ({
     meta: [
-      { title: "RealEstateForever.com | Real Estate Investments." },
+      { title: "RealEstateForever.com | Terms of Service" },
       { name: "description", content: "The terms that govern your use of the Real Estate Forever private marketplace." },
-      { property: "og:title", content: "RealEstateForever.com | Real Estate Investments." },
+      { property: "og:title", content: "RealEstateForever.com | Terms of Service" },
       { property: "og:description", content: "The terms that govern your use of the Real Estate Forever private marketplace." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

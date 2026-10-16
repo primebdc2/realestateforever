@@ -179,13 +179,13 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Real Estate Investments & Development | RealEstateForever.com" },
+      { title: "RealEstateForever.com" },
       {
         name: "description",
         content: "RealEstateForever.com",
       },
       { property: "og:site_name", content: "RealEstateForever.com" },
-      { property: "og:title", content: "Real Estate Investments & Development" },
+      { property: "og:title", content: "RealEstateForever.com" },
       { property: "og:description", content: "RealEstateForever.com" },
       { property: "og:image", content: "https://realestateforever.com/og-image.jpg" },
       { property: "og:image:width", content: "1024" },
@@ -193,7 +193,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image:type", content: "image/jpeg" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Real Estate Investments & Development" },
+      { name: "twitter:title", content: "RealEstateForever.com" },
       { name: "twitter:description", content: "RealEstateForever.com" },
       { name: "twitter:image", content: "https://realestateforever.com/og-image.jpg" },
     ],
@@ -218,13 +218,15 @@ function Homepage() {
     video.muted = true;
 
     const playVideo = () => {
-      const promise = video.play();
-      if (promise !== undefined) {
-        promise.catch(() => {
-          video.defaultMuted = true;
-          video.muted = true;
-          void video.play().catch(() => undefined);
-        });
+      if (video.paused) {
+        const promise = video.play();
+        if (promise !== undefined) {
+          promise.catch(() => {
+            video.defaultMuted = true;
+            video.muted = true;
+            void video.play().catch(() => undefined);
+          });
+        }
       }
     };
 
@@ -233,6 +235,27 @@ function Homepage() {
     video.addEventListener("loadedmetadata", playVideo);
     video.addEventListener("loadeddata", playVideo);
     video.addEventListener("canplay", playVideo);
+
+    // Seamless loop transition: prevent sudden jump cuts or skips near loop boundary
+    const handleTimeUpdate = () => {
+      if (!video.duration || Number.isNaN(video.duration)) return;
+      const timeLeft = video.duration - video.currentTime;
+      if (timeLeft <= 0.65 && timeLeft > 0) {
+        video.style.opacity = "0.2";
+      } else if (video.currentTime < 0.6) {
+        video.style.opacity = "1";
+      } else if (video.style.opacity !== "1") {
+        video.style.opacity = "1";
+      }
+    };
+
+    const handleSeekedOrPlaying = () => {
+      video.style.opacity = "1";
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("seeked", handleSeekedOrPlaying);
+    video.addEventListener("playing", handleSeekedOrPlaying);
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
@@ -253,6 +276,9 @@ function Homepage() {
       video.removeEventListener("loadedmetadata", playVideo);
       video.removeEventListener("loadeddata", playVideo);
       video.removeEventListener("canplay", playVideo);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("seeked", handleSeekedOrPlaying);
+      video.removeEventListener("playing", handleSeekedOrPlaying);
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("focus", playVideo);
       window.removeEventListener("pointerdown", handleInteraction);
@@ -458,11 +484,13 @@ function Homepage() {
           playsInline
           preload="auto"
           aria-label="Real Estate Forever main film"
-          className="size-full w-full object-cover object-center pointer-events-none select-none"
+          className="size-full w-full object-cover object-center pointer-events-none select-none transition-opacity duration-700 ease-in-out"
         >
-          <source src={homeMainWebm.url} type="video/webm" />
           <source src={homeMainVideo.url} type="video/mp4" />
+          <source src={homeMainWebm.url} type="video/webm" />
         </video>
+        {/* Subtle cinematic gold-ambient edge vignette */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
       </section>
 
       <section

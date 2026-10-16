@@ -29,10 +29,10 @@ export const Route = createFileRoute("/inventory")({
   },
   head: () => ({
     meta: [
-      { title: "Real Estate Investments & Development | RealEstateForever.com" },
+      { title: "RealEstateForever.com" },
       { name: "description", content: "RealEstateForever.com" },
       { property: "og:site_name", content: "RealEstateForever.com" },
-      { property: "og:title", content: "Real Estate Investments & Development" },
+      { property: "og:title", content: "RealEstateForever.com" },
       { property: "og:description", content: "RealEstateForever.com" },
       { property: "og:image", content: "https://realestateforever.com/og-image.jpg" },
       { property: "og:image:width", content: "1024" },
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/inventory")({
       { property: "og:image:type", content: "image/jpeg" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Real Estate Investments & Development" },
+      { name: "twitter:title", content: "RealEstateForever.com" },
       { name: "twitter:description", content: "RealEstateForever.com" },
       { name: "twitter:image", content: "https://realestateforever.com/og-image.jpg" },
     ]

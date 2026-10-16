@@ -256,43 +256,7 @@ export function LuxMotionManager() {
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("mouseleave", handlePointerLeave, { passive: true });
 
-    // 5. Magnetic Pull on Leadership Submit Button
-    const handleBtnMove = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      const btn = target?.closest<HTMLElement>(".leadership-submit-btn");
-      if (!btn) return;
-      const rect = btn.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const deltaX = (e.clientX - centerX) * 0.25;
-      const deltaY = (e.clientY - centerY) * 0.25;
-
-      gsap.to(btn, {
-        x: deltaX,
-        y: deltaY,
-        duration: 0.3,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    };
-
-    const handleBtnLeave = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      const btn = target?.closest<HTMLElement>(".leadership-submit-btn");
-      if (!btn) return;
-      gsap.to(btn, {
-        x: 0,
-        y: 0,
-        duration: 0.55,
-        ease: "elastic.out(1, 0.4)",
-        overwrite: "auto",
-      });
-    };
-
-    window.addEventListener("mousemove", handleBtnMove, { passive: true });
-    window.addEventListener("mouseout", handleBtnLeave, { passive: true });
-
-    // 6. Dynamic MutationObserver: Watch for filter/search/tab changes across the entire page
+    // 5. Dynamic MutationObserver: Watch for filter/search/tab changes across the entire page
     let mutationDebounceTimer: NodeJS.Timeout | null = null;
     const mutationObserver = new MutationObserver(() => {
       if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
@@ -328,8 +292,6 @@ export function LuxMotionManager() {
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("mousemove", handlePointerMove);
       window.removeEventListener("mouseleave", handlePointerLeave);
-      window.removeEventListener("mousemove", handleBtnMove);
-      window.removeEventListener("mouseout", handleBtnLeave);
       gsap.ticker.remove(updateRaf);
       lenis.destroy();
       headingTriggers.forEach((t) => t.kill());

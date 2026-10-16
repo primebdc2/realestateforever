@@ -19,10 +19,10 @@ export const Route = createFileRoute("/welcome")({
     const ogImage = "https://realestateforever.com/og-image.jpg";
     return {
       meta: [
-        { title: "Real Estate Investments & Development | RealEstateForever.com" },
+        { title: "RealEstateForever.com | Private access" },
         { name: "description", content: "RealEstateForever.com" },
         { property: "og:site_name", content: "RealEstateForever.com" },
-        { property: "og:title", content: "Real Estate Investments & Development" },
+        { property: "og:title", content: "RealEstateForever.com | Private access" },
         { property: "og:description", content: "RealEstateForever.com" },
         { property: "og:image", content: ogImage },
         { property: "og:image:width", content: "1024" },
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/welcome")({
         { property: "og:image:type", content: "image/jpeg" },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "Real Estate Investments & Development" },
+        { name: "twitter:title", content: "RealEstateForever.com | Private access" },
         { name: "twitter:description", content: "RealEstateForever.com" },
         { name: "twitter:image", content: ogImage },
       ],
@@ -84,6 +84,7 @@ function Welcome() {
       }
       video.currentTime = 0;
       void video.play().catch(() => undefined);
+      video.style.opacity = "1";
     };
 
     let lastTime = 0;
@@ -95,6 +96,22 @@ function Welcome() {
         }
       }
       lastTime = video.currentTime;
+
+      // Seamless loop dissolve: prevents abrupt skips or jumps at loop boundary
+      if (video.duration && !Number.isNaN(video.duration)) {
+        const timeLeft = video.duration - video.currentTime;
+        if (timeLeft <= 0.65 && timeLeft > 0) {
+          video.style.opacity = "0.2";
+        } else if (video.currentTime < 0.6) {
+          video.style.opacity = "1";
+        } else if (video.style.opacity !== "1") {
+          video.style.opacity = "1";
+        }
+      }
+    };
+
+    const handleSeekedOrPlaying = () => {
+      video.style.opacity = "1";
     };
 
     const handleVolumeChange = () => {
@@ -104,6 +121,8 @@ function Welcome() {
     video.addEventListener("ended", handleEnded);
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("volumechange", handleVolumeChange);
+    video.addEventListener("seeked", handleSeekedOrPlaying);
+    video.addEventListener("playing", handleSeekedOrPlaying);
 
     const startUnmutedPlayback = () => {
       video.muted = false;
@@ -169,6 +188,8 @@ function Welcome() {
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("volumechange", handleVolumeChange);
+      video.removeEventListener("seeked", handleSeekedOrPlaying);
+      video.removeEventListener("playing", handleSeekedOrPlaying);
       if (cleanupInteractionListeners) {
         cleanupInteractionListeners();
       }
@@ -292,12 +313,13 @@ function Welcome() {
         ref={videoRef}
         autoPlay
         muted={muted}
+        loop
         playsInline
         preload="auto"
         poster={mainVideoPoster.url}
         aria-label="Real Estate Forever introduction film"
         onClick={toggleSound}
-        className="order-3 relative my-3 mx-auto w-[calc(100%-2.5rem)] max-w-md aspect-video cursor-pointer rounded-xl border border-primary/35 object-cover shadow-2xl shadow-black/80 sm:order-none sm:my-0 sm:mx-auto sm:w-full sm:h-full sm:size-full sm:max-w-none sm:cursor-default sm:aspect-auto sm:rounded-none sm:border-0 sm:shadow-none sm:absolute sm:inset-0 sm:-z-20 sm:object-contain sm:object-center sm:pointer-events-none"
+        className="order-3 relative my-3 mx-auto w-[calc(100%-2.5rem)] max-w-md aspect-video cursor-pointer rounded-xl border border-primary/35 object-cover shadow-2xl shadow-black/80 sm:order-none sm:my-0 sm:mx-auto sm:w-full sm:h-full sm:size-full sm:max-w-none sm:cursor-default sm:aspect-auto sm:rounded-none sm:border-0 sm:shadow-none sm:absolute sm:inset-0 sm:-z-20 sm:object-contain sm:object-center sm:pointer-events-none transition-opacity duration-700 ease-in-out"
       >
         <source src={mainVideo.url} type="video/mp4" />
         <source src={mainVideoWebm.url} type="video/webm" />

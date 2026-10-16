@@ -19,9 +19,9 @@ export const Route = createFileRoute("/privacy")({
   },
   head: () => ({
     meta: [
-      { title: "RealEstateForever.com | Real Estate Investments." },
+      { title: "RealEstateForever.com | Privacy Policy" },
       { name: "description", content: "How Real Estate Forever collects, uses, and protects your information." },
-      { property: "og:title", content: "RealEstateForever.com | Real Estate Investments." },
+      { property: "og:title", content: "RealEstateForever.com | Privacy Policy" },
       { property: "og:description", content: "How Real Estate Forever collects, uses, and protects your information." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
