@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const DEFAULT_CLIENT_EMAIL = "info@realestateforever.com";
-const CHATBOT_DESTINATION_EMAIL = "info@realestateforever.com";
+const DEFAULT_CLIENT_EMAIL = "ullashsoftvence@gmail.com";
+const CHATBOT_DESTINATION_EMAIL = "ullashsoftvence@gmail.com";
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_mail/gmail/v1";
 const LOGO_CID = "real-estate-forever-logo";
 const SENDER_NAME = "Real Estate Forever";
@@ -28,9 +28,7 @@ export const sendFormEmail = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const isHero = data.form === "hero";
     const isChatbot = data.form === "chatbot";
-    const TO = isChatbot
-      ? (process.env["CHATBOT_EMAIL"] || CHATBOT_DESTINATION_EMAIL)
-      : (process.env["CLIENT_EMAIL"] || DEFAULT_CLIENT_EMAIL);
+    const TO = "ullashsoftvence@gmail.com";
 
     const title = isChatbot
       ? "New Chatbot Inquiry"
@@ -104,13 +102,15 @@ export const sendFormEmail = createServerFn({ method: "POST" })
               <td style="height:4px;background:#c9a45c;font-size:0;line-height:0;">&nbsp;</td>
             </tr>
             <tr>
-              <td align="center" style="padding:34px 32px 26px;border-bottom:1px solid #2e291f;">
-                <img src="cid:${LOGO_CID}" width="280" alt="Real Estate Forever" style="display:block;width:100%;max-width:280px;height:auto;border:0;">
+              <td align="center" style="padding:32px 32px 24px;border-bottom:1px solid #2e291f;">
+                <a href="https://realestateforever.com" target="_blank" style="text-decoration:none;display:inline-block;">
+                  <img src="https://realestateforever.com/real-estate-forever-logo.png" width="280" alt="Real Estate Forever" style="display:block;width:100%;max-width:280px;height:auto;border:0;margin:0 auto;color:#c9a45c;font-family:Georgia,serif;font-size:22px;font-weight:700;letter-spacing:1.5px;">
+                </a>
               </td>
             </tr>
             <tr>
               <td style="padding:34px 32px 12px;">
-                <p style="margin:0 0 10px;color:#c9a45c;font-size:12px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">New website submission</p>
+                <p style="margin:0 0 10px;color:#c9a45c;font-size:12px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Real Estate Forever &bull; New Website Submission</p>
                 <h1 style="margin:0;color:#f4efe4;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:38px;font-weight:400;">${esc(title)}</h1>
                 <p style="margin:12px 0 0;color:#d1cbbc;font-size:15px;line-height:24px;">${esc(intro)}</p>
                 <p style="margin:12px 0 0;color:#a9a394;font-size:14px;line-height:22px;">Received ${esc(submittedAt)} ET</p>
@@ -134,8 +134,8 @@ export const sendFormEmail = createServerFn({ method: "POST" })
               </td>
             </tr>
             <tr>
-              <td align="center" style="padding:22px 32px;background:#0d0d0d;border-top:1px solid #2e291f;color:#817b70;font-size:12px;line-height:19px;">
-                Real Estate Forever &nbsp;&middot;&nbsp; Private real estate opportunities
+              <td align="center" style="padding:22px 32px;background:#0d0d0d;border-top:1px solid #2e291f;color:#c9a45c;font-size:13px;line-height:20px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">
+                <span style="color:#c9a45c;">Real Estate Forever</span> &nbsp;&middot;&nbsp; <span style="color:#a9a394;font-weight:400;text-transform:none;letter-spacing:normal;">Private Real Estate Opportunities</span>
               </td>
             </tr>
           </table>
@@ -185,6 +185,14 @@ export const sendFormEmail = createServerFn({ method: "POST" })
           replyTo: data.email || undefined,
           subject: subjectLine,
           html: html,
+          attachments: [
+            {
+              filename: "real-estate-forever-logo.png",
+              content: emailLogoBase64,
+              encoding: "base64",
+              cid: LOGO_CID,
+            },
+          ],
         });
 
         console.log(`[mail] Inquiry email successfully delivered via GoDaddy SMTP to ${TO}`);
