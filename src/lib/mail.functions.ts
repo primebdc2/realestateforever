@@ -97,38 +97,99 @@ export const sendFormEmail = createServerFn({ method: "POST" })
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${esc(title)}</title>
+    <style type="text/css">
+      body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+      img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+      @media only screen and (max-width: 600px) {
+        .email-outer-td {
+          padding: 12px 6px !important;
+        }
+        .email-card {
+          width: 100% !important;
+          max-width: 100% !important;
+          border-radius: 6px !important;
+        }
+        .email-header-td {
+          padding: 24px 16px 18px !important;
+        }
+        .email-logo-img {
+          width: 220px !important;
+          max-width: 220px !important;
+        }
+        .email-body-td {
+          padding: 22px 16px 8px !important;
+        }
+        .email-h1 {
+          font-size: 22px !important;
+          line-height: 28px !important;
+        }
+        .email-table-td {
+          padding: 10px 14px 24px !important;
+        }
+        .email-data-table {
+          width: 100% !important;
+        }
+        .mobile-stack-label {
+          display: block !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          padding: 12px 14px 4px !important;
+          border-top: 1px solid #302b22 !important;
+          font-size: 11px !important;
+          letter-spacing: 1.5px !important;
+        }
+        .mobile-stack-label.first-row {
+          border-top: none !important;
+        }
+        .mobile-stack-value {
+          display: block !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          padding: 0 14px 14px !important;
+          border-top: none !important;
+          font-size: 15px !important;
+          line-height: 22px !important;
+        }
+        .email-footer-td {
+          padding: 18px 14px !important;
+          font-size: 11px !important;
+          line-height: 18px !important;
+        }
+      }
+    </style>
   </head>
   <body style="margin:0;padding:0;background:#ffffff;color:#f4efe4;font-family:Arial,Helvetica,sans-serif;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#ffffff;">
       <tr>
-        <td align="center" style="padding:32px 16px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;background:#0a0a0a;border:1px solid #3e3424;border-radius:8px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,.35);">
+        <td align="center" class="email-outer-td" style="padding:32px 16px;">
+          <table role="presentation" class="email-card" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;background:#0a0a0a;border:1px solid #3e3424;border-radius:8px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,.35);">
             <tr>
               <td style="height:4px;background:#c9a45c;font-size:0;line-height:0;">&nbsp;</td>
             </tr>
             <tr>
-              <td align="center" style="padding:32px 32px 24px;border-bottom:1px solid #2e291f;">
+              <td align="center" class="email-header-td" style="padding:32px 32px 24px;border-bottom:1px solid #2e291f;">
                 <a href="https://realestateforever.com" target="_blank" style="text-decoration:none;display:inline-block;">
-                  <img src="https://realestateforever.com/real-estate-forever-logo.png" width="280" alt="Real Estate Forever" style="display:block;width:100%;max-width:280px;height:auto;border:0;margin:0 auto;color:#c9a45c;font-family:Georgia,serif;font-size:22px;font-weight:700;letter-spacing:1.5px;">
+                  <img src="https://realestateforever.com/real-estate-forever-logo.png" class="email-logo-img" width="280" alt="Real Estate Forever" style="display:block;width:100%;max-width:280px;height:auto;border:0;margin:0 auto;color:#c9a45c;font-family:Georgia,serif;font-size:22px;font-weight:700;letter-spacing:1.5px;">
                 </a>
               </td>
             </tr>
             <tr>
-              <td style="padding:34px 32px 12px;">
+              <td class="email-body-td" style="padding:34px 32px 12px;">
                 <p style="margin:0 0 10px;color:#c9a45c;font-size:12px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Real Estate Forever &bull; New Website Submission</p>
-                <h1 style="margin:0;color:#f4efe4;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:38px;font-weight:400;">${esc(title)}</h1>
+                <h1 class="email-h1" style="margin:0;color:#f4efe4;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:38px;font-weight:400;">${esc(title)}</h1>
                 <p style="margin:12px 0 0;color:#d1cbbc;font-size:15px;line-height:24px;">${esc(intro)}</p>
                 <p style="margin:12px 0 0;color:#a9a394;font-size:14px;line-height:22px;">Received ${esc(submittedAt)} ET</p>
               </td>
             </tr>
             <tr>
-              <td style="padding:18px 32px 36px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #302b22;border-radius:7px;border-collapse:separate;overflow:hidden;">
+              <td class="email-table-td" style="padding:18px 32px 36px;">
+                <table role="presentation" class="email-data-table" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #302b22;border-radius:7px;border-collapse:separate;overflow:hidden;">
                   ${rows
         .map(
           ([key, value], index) => `<tr>
-                    <td valign="top" style="width:110px;padding:18px 20px;color:#c9a45c;font-size:12px;line-height:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;${index ? "border-top:1px solid #302b22;" : ""}">${esc(key)}</td>
-                    <td valign="top" style="padding:18px 20px;color:#f4efe4;font-size:16px;line-height:24px;word-break:break-word;${index ? "border-top:1px solid #302b22;" : ""}">${key === "Email" && z.string().email().safeParse(value).success
+                    <td valign="top" class="mobile-stack-label${index === 0 ? " first-row" : ""}" style="width:110px;padding:18px 20px;color:#c9a45c;font-size:12px;line-height:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;${index ? "border-top:1px solid #302b22;" : ""}">${esc(key)}</td>
+                    <td valign="top" class="mobile-stack-value" style="padding:18px 20px;color:#f4efe4;font-size:16px;line-height:24px;word-break:break-word;${index ? "border-top:1px solid #302b22;" : ""}">${key === "Email" && z.string().email().safeParse(value).success
               ? `<a href="mailto:${esc(value)}" style="color:#f4efe4;text-decoration:underline;text-decoration-color:#c9a45c;">${esc(value)}</a>`
               : esc(value || "—").replace(/\n/g, "<br>")
             }</td>
@@ -139,8 +200,10 @@ export const sendFormEmail = createServerFn({ method: "POST" })
               </td>
             </tr>
             <tr>
-              <td align="center" style="padding:22px 32px;background:#0d0d0d;border-top:1px solid #2e291f;color:#c9a45c;font-size:13px;line-height:20px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">
-                <span style="color:#c9a45c;">Real Estate Forever</span> &nbsp;&middot;&nbsp; <span style="color:#a9a394;font-weight:400;text-transform:none;letter-spacing:normal;">Private Real Estate Opportunities</span>
+              <td align="center" class="email-footer-td" style="padding:22px 24px;background:#0d0d0d;border-top:1px solid #2e291f;color:#c9a45c;font-size:13px;line-height:20px;font-weight:700;letter-spacing:1px;text-align:center;">
+                <span style="color:#c9a45c;display:inline-block;">Real Estate Forever</span>
+                <span style="color:#5e5443;margin:0 6px;">&middot;</span>
+                <span style="color:#a9a394;font-weight:400;letter-spacing:normal;display:inline-block;">Private Real Estate Opportunities</span>
               </td>
             </tr>
           </table>
