@@ -48,12 +48,13 @@ export type Listing = {
   beds: string;
   baths: string;
   area: string;
-  entry: string;
-  down: string;
-  arv: string;
-  type: string;
-  lister: string;
-  isNew: boolean;
+  price?: string;
+  entry?: string;
+  down?: string;
+  arv?: string;
+  type?: string;
+  lister?: string;
+  isNew?: boolean;
 };
 
 export const listings: Listing[] = [

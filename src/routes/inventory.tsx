@@ -12,7 +12,7 @@ import { vehicleLocationZips } from "@/data/vehicle-locations";
 
 const InventoryMap = lazy(() => import("@/components/inventory-map").then((m) => ({ default: m.InventoryMap })));
 const states = [...new Set(listings.map((listing) => listing.state))].sort();
-const entryNumber = (listing: Listing) => Number(listing.entry.replace(/[^\d.]/g, "")) || 0;
+const entryNumber = (listing: Listing) => Number(listing.entry?.replace(/[^\d.]/g, "")) || 0;
 const selectClass = "h-10 min-w-0 appearance-none border border-border bg-background px-3 pr-8 text-[12px] tracking-[0.05em] text-foreground outline-none transition-colors focus:border-primary";
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 
@@ -23,9 +23,15 @@ type InventoryItem =
 export const Route = createFileRoute("/inventory")({
   ssr: false,
   loader: async () => {
-    const content = await getComingSoonContent({ data: { token: getVisitToken() } });
-    if (!content.unlocked) throw redirect({ to: "/welcome" });
-    return content;
+    try {
+      const content = await getComingSoonContent({ data: { token: getVisitToken() } });
+      if (!content.unlocked) throw redirect({ to: "/welcome" });
+      return content;
+    } catch (err) {
+      if ((err as { to?: string })?.to) throw err;
+      console.error("[Inventory Route loader] error:", err);
+      throw redirect({ to: "/welcome" });
+    }
   },
   head: () => ({
     meta: [
@@ -194,6 +200,7 @@ function InventoryPage() {
       state: item.vehicle.location ?? "",
       zip,
       beds: item.vehicle.subtitle ?? "",
+      baths: "",
       area: item.vehicle.category ?? "",
       entry: "",
       down: "",
@@ -237,7 +244,7 @@ function InventoryPage() {
         </Suspense>
         <p className="absolute right-2 top-2 z-[500] bg-background/90 px-2 py-1 text-[10px] text-foreground">Approximate ZIP areas · not addresses</p>
       </div>
-      <div className="flex min-h-0 w-full flex-col border-l border-border bg-background lg:w-[42%]">
+      <div className="flex min-h-0 w-full flex-col border-l border-border bg-background lg:h-full lg:w-[42%]">
         <div className="shrink-0 border-b border-border px-4 py-5 sm:px-6">
           <div className="flex items-center justify-between gap-3">
             <div><p className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary">Marketplace</p><h2 className="font-display text-2xl font-medium sm:text-3xl text-foreground">Explore listings</h2></div>
@@ -252,7 +259,7 @@ function InventoryPage() {
           {expanded && <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-primary/15 pt-3"><label className="flex items-center gap-2 text-[12px] text-muted-foreground">State <select aria-label="State" value={state} onChange={(e) => setState(e.target.value)} className={selectClass}><option value="all">All states</option>{states.map((s) => <option key={s} value={s}>{s}</option>)}</select></label><Button type="button" variant="ghost" onClick={reset} className="text-primary hover:bg-card hover:text-primary">Clear filters <X className="size-4" /></Button></div>}
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-primary/15 pt-3 text-[12px] text-muted-foreground"><span className="flex items-center gap-3">{filtered.length} of {items.length} listings{hasFilters && <button type="button" onClick={reset} className="flex items-center gap-1 text-primary underline-offset-4 outline-none hover:underline focus-visible:underline" aria-label="Clear all filters"><X className="size-3.5" /> Clear filters</button>}</span><label className="flex items-center gap-2">Sort <select aria-label="Sort listings" value={sort} onChange={(e) => setSort(e.target.value)} className="bg-background text-[12px] text-foreground outline-none"><option value="latest">Original order</option><option value="state">State (A-Z)</option></select></label></div>
         </div>
-        <div id="inventory-listings-scroll" className="min-h-0 flex-1 lg:overflow-y-auto" aria-label="Listings">
+        <div id="inventory-listings-scroll" data-lenis-prevent className="min-h-0 flex-1 overscroll-y-contain lg:overflow-y-auto" aria-label="Listings">
           {filtered.length === 0 && <div className="p-8 text-center"><p className="font-display text-2xl">No matching listings</p><Button variant="outline" onClick={reset} className="mt-4 rounded-none border-primary text-primary hover:bg-card hover:text-primary">Clear filters</Button></div>}
           <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-1 xl:grid-cols-2">
             {filtered.map((item) => item.kind === "property" ? (() => {

@@ -267,14 +267,14 @@ export function LuxMotionManager() {
 
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Also listen to internal inventory scroll container
-    const inventoryScroller = document.getElementById("inventory-listings-scroll");
-    const handleInventoryScroll = () => {
-      registerAllCards();
+    // Also listen to internal inventory scroll container reliably via capture
+    const handleScrollCapture = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.id === "inventory-listings-scroll" || target?.closest?.("#inventory-listings-scroll")) {
+        registerAllCards();
+      }
     };
-    if (inventoryScroller) {
-      inventoryScroller.addEventListener("scroll", handleInventoryScroll, { passive: true });
-    }
+    window.addEventListener("scroll", handleScrollCapture, { capture: true, passive: true });
 
     const initialTimer = setTimeout(() => {
       ScrollTrigger.refresh();
@@ -286,9 +286,7 @@ export function LuxMotionManager() {
       if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
       mutationObserver.disconnect();
       intersectionObserver.disconnect();
-      if (inventoryScroller) {
-        inventoryScroller.removeEventListener("scroll", handleInventoryScroll);
-      }
+      window.removeEventListener("scroll", handleScrollCapture, true);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("mousemove", handlePointerMove);
       window.removeEventListener("mouseleave", handlePointerLeave);

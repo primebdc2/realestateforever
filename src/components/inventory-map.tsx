@@ -3,7 +3,8 @@ import type { Listing } from "@/data/listings";
 import { zipCoordinates } from "@/data/zip-coordinates";
 import "leaflet/dist/leaflet.css";
 
-const escape = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
+const escape = (s?: unknown) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
 // Listings have ZIP codes rather than street addresses. Spread shared-ZIP pins slightly so all remain selectable.
 function position(listing: Listing, items: Listing[]): [number, number] | null {
   const center = zipCoordinates[listing.zip];
@@ -80,7 +81,11 @@ export function InventoryMap({ listings, selectedId, onSelect }: { listings: Lis
           popupAnchor: [0, -18],
         }),
       });
-      marker.bindPopup(`<div class="inventory-popup">${listing.image ? `<img src="${escape(listing.image)}" alt=""/>` : ""}<div class="inventory-popup-body"><strong>${escape(listing.city)}, ${escape(listing.state)} ${escape(listing.zip)}</strong><span>${escape(listing.beds)} beds · ${escape(listing.baths)} baths · ${escape(listing.area)} sq ft</span><em>Approximate ZIP-area location</em></div></div>`, { maxWidth: 260, minWidth: 220 });
+      const isVehicle = listing.id < 0;
+      const subtitle = isVehicle
+        ? `${escape(listing.beds || listing.type || "")}`
+        : `${escape(listing.beds)} beds · ${escape(listing.baths)} baths · ${escape(listing.area)} sq ft`;
+      marker.bindPopup(`<div class="inventory-popup">${listing.image ? `<img src="${escape(listing.image)}" alt=""/>` : ""}<div class="inventory-popup-body"><strong>${escape(listing.city)}, ${escape(listing.state)} ${escape(listing.zip)}</strong><span>${subtitle}</span><em>Approximate ZIP-area location</em></div></div>`, { maxWidth: 260, minWidth: 220 });
       marker.on("click", () => { callbackRef.current(listing.id); map.flyTo(coord, Math.max(map.getZoom(), 8), { duration: .6 }); });
       markersRef.current.set(listing.id, marker);
       marker.addTo(layer);
