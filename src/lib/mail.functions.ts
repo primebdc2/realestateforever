@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const DEFAULT_CLIENT_EMAIL = "ullashsoftvence@gmail.com";
-const CHATBOT_DESTINATION_EMAIL = "ullashsoftvence@gmail.com";
+const DEFAULT_CLIENT_EMAIL = "info@realestateforever.com";
+const CHATBOT_DESTINATION_EMAIL = "info@realestateforever.com";
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_mail/gmail/v1";
 const LOGO_CID = "real-estate-forever-logo";
 const SENDER_NAME = "Real Estate Forever";
@@ -28,7 +28,9 @@ export const sendFormEmail = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const isHero = data.form === "hero";
     const isChatbot = data.form === "chatbot";
-    const TO = "ullashsoftvence@gmail.com";
+    const TO = isChatbot
+      ? (process.env["CHATBOT_EMAIL"] || CHATBOT_DESTINATION_EMAIL)
+      : (process.env["CLIENT_EMAIL"] || DEFAULT_CLIENT_EMAIL);
 
     const title = isChatbot
       ? "New Chatbot Inquiry"
@@ -170,7 +172,7 @@ export const sendFormEmail = createServerFn({ method: "POST" })
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Real Estate Forever <onboarding@resend.dev>",
+            from: "Real Estate Forever <contact@realestateforever.com>",
             to: [TO],
             reply_to: data.email || undefined,
             subject: subjectLine,
