@@ -2,8 +2,6 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowRight, CheckCircle2, KeyRound, LockKeyhole, Mail, Volume2, VolumeX } from "lucide-react";
 import { useState, useRef, useEffect, type FormEvent } from "react";
-import mainVideo from "@/assets/ure2.mp4.asset.json";
-import mainVideoWebm from "@/assets/ure2.webm.asset.json";
 import mainVideoPoster from "@/assets/ure2-poster.jpg.asset.json";
 import ogImageAsset from "@/assets/og-image.png.asset.json";
 import { BrandLogo } from "@/components/brand-logo";
@@ -50,90 +48,77 @@ function Welcome() {
   const [activeTab, setActiveTab] = useState<"password" | "leadership">("password");
   const [leadershipSending, setLeadershipSending] = useState(false);
   const [leadershipSent, setLeadershipSent] = useState<boolean | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const activeVideoRef = useRef<1 | 2>(1);
+  const crossfadingRef = useRef(false);
   const soundPlayCountRef = useRef(0);
-  const lastCycleTimeRef = useRef(0);
 
   useEffect(() => {
     clearVisitToken();
     setPassword("");
     setError(false);
 
-    const video = videoRef.current;
-    if (!video) return;
+    const v1 = video1Ref.current;
+    const v2 = video2Ref.current;
+    if (!v1 || !v2) return;
+
+    v1.style.opacity = "1";
+    v2.style.opacity = "0";
 
     let cleanupInteractionListeners: (() => void) | null = null;
 
-    const onCycleComplete = () => {
-      const now = Date.now();
-      // Video duration is ~59.3s; debounce by 25s so ended + timeupdate cannot double count
-      if (now - lastCycleTimeRef.current < 25000) return;
-      lastCycleTimeRef.current = now;
+    const CROSSFADE_TIME = 1.0;
+    const checkCrossfade = (current: HTMLVideoElement, next: HTMLVideoElement, targetNum: 1 | 2) => {
+      if (!current.duration || Number.isNaN(current.duration)) return;
+      const timeLeft = current.duration - current.currentTime;
+      if (timeLeft <= CROSSFADE_TIME && !crossfadingRef.current) {
+        crossfadingRef.current = true;
 
-      soundPlayCountRef.current += 1;
-      if (soundPlayCountRef.current >= 2) {
-        // Completed 2 full soundtrack plays: mute audio and loop video silently
-        video.muted = true;
-        setMuted(true);
-      }
-    };
-
-    const handleEnded = () => {
-      if (!video.muted) {
-        onCycleComplete();
-      }
-      video.currentTime = 0;
-      void video.play().catch(() => undefined);
-      video.style.opacity = "1";
-    };
-
-    let lastTime = 0;
-    const handleTimeUpdate = () => {
-      // In case video loops internally without triggering ended, or seeks from >50s back to <2s
-      if (lastTime > 50 && video.currentTime < 2) {
-        if (!video.muted) {
-          onCycleComplete();
+        if (!current.muted) {
+          soundPlayCountRef.current += 1;
+          if (soundPlayCountRef.current >= 2) {
+            current.muted = true;
+            next.muted = true;
+            setMuted(true);
+          }
         }
+
+        next.muted = current.muted;
+        next.currentTime = 0;
+        void next.play().catch(() => undefined);
+        next.style.opacity = "1";
+        current.style.opacity = "0";
+
+        setTimeout(() => {
+          current.pause();
+          current.currentTime = 0;
+          activeVideoRef.current = targetNum;
+          crossfadingRef.current = false;
+        }, 1000);
       }
-      lastTime = video.currentTime;
-
-      // Seamless loop dissolve: prevents abrupt skips or jumps at loop boundary
-      if (video.duration && !Number.isNaN(video.duration)) {
-        const timeLeft = video.duration - video.currentTime;
-        if (timeLeft <= 0.65 && timeLeft > 0) {
-          video.style.opacity = "0.2";
-        } else if (video.currentTime < 0.6) {
-          video.style.opacity = "1";
-        } else if (video.style.opacity !== "1") {
-          video.style.opacity = "1";
-        }
-      }
     };
 
-    const handleSeekedOrPlaying = () => {
-      video.style.opacity = "1";
+    const handleTime1 = () => {
+      if (activeVideoRef.current === 1) checkCrossfade(v1, v2, 2);
+    };
+    const handleTime2 = () => {
+      if (activeVideoRef.current === 2) checkCrossfade(v2, v1, 1);
     };
 
-    const handleVolumeChange = () => {
-      setMuted(video.muted);
-    };
-
-    video.addEventListener("ended", handleEnded);
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("volumechange", handleVolumeChange);
-    video.addEventListener("seeked", handleSeekedOrPlaying);
-    video.addEventListener("playing", handleSeekedOrPlaying);
+    v1.addEventListener("timeupdate", handleTime1);
+    v2.addEventListener("timeupdate", handleTime2);
 
     const startUnmutedPlayback = () => {
-      video.muted = false;
-      video.volume = 1;
-      video.currentTime = 0;
+      const active = activeVideoRef.current === 1 ? v1 : v2;
+      active.muted = false;
+      active.volume = 1;
       soundPlayCountRef.current = 0;
-      lastCycleTimeRef.current = Date.now();
       setMuted(false);
       setWaitingForGesture(false);
-      void video.play().catch(() => {
-        video.muted = true;
+      void active.play().catch(() => {
+        v1.muted = true;
+        v2.muted = true;
         setMuted(true);
       });
     };
@@ -161,35 +146,29 @@ function Welcome() {
     };
 
     // Attempt unmuted playback initially
-    video.muted = false;
-    video.volume = 1;
-    const playPromise = video.play();
+    v1.muted = false;
+    v1.volume = 1;
+    const playPromise = v1.play();
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          // Browser allowed unmuted autoplay!
           setMuted(false);
           setWaitingForGesture(false);
-          lastCycleTimeRef.current = Date.now();
           soundPlayCountRef.current = 0;
         })
         .catch(() => {
-          // Browser blocked unmuted autoplay due to policy (Chrome/Safari default).
-          // Play muted so background visual runs, and prompt/listen for first interaction.
-          video.muted = true;
+          v1.muted = true;
+          v2.muted = true;
           setMuted(true);
           setWaitingForGesture(true);
-          void video.play().catch(() => undefined);
+          void v1.play().catch(() => undefined);
           setupUserGestureListeners();
         });
     }
 
     return () => {
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("volumechange", handleVolumeChange);
-      video.removeEventListener("seeked", handleSeekedOrPlaying);
-      video.removeEventListener("playing", handleSeekedOrPlaying);
+      v1.removeEventListener("timeupdate", handleTime1);
+      v2.removeEventListener("timeupdate", handleTime2);
       if (cleanupInteractionListeners) {
         cleanupInteractionListeners();
       }
@@ -199,25 +178,29 @@ function Welcome() {
   const toggleSound = (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
+    const v1 = video1Ref.current;
+    const v2 = video2Ref.current;
+    if (!v1 || !v2) return;
 
-    if (video.muted) {
-      // Unmute and start 2 full cycles from the start
-      video.muted = false;
-      video.volume = 1;
-      video.currentTime = 0;
+    const active = activeVideoRef.current === 1 ? v1 : v2;
+    const inactive = activeVideoRef.current === 1 ? v2 : v1;
+
+    if (muted) {
+      active.muted = false;
+      active.volume = 1;
+      inactive.muted = false;
+      inactive.volume = 1;
       soundPlayCountRef.current = 0;
-      lastCycleTimeRef.current = Date.now();
       setMuted(false);
       setWaitingForGesture(false);
-      void video.play().catch(() => {
-        video.muted = true;
+      void active.play().catch(() => {
+        active.muted = true;
+        inactive.muted = true;
         setMuted(true);
       });
     } else {
-      // Mute audio
-      video.muted = true;
+      v1.muted = true;
+      v2.muted = true;
       setMuted(true);
       setWaitingForGesture(false);
     }
@@ -308,22 +291,34 @@ function Welcome() {
         </h1>
       </div>
 
-      {/* Video: In-flow below heading on mobile, full-screen background on desktop */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted={muted}
-        loop
-        playsInline
-        preload="auto"
-        poster={mainVideoPoster.url}
-        aria-label="Real Estate Forever introduction film"
+      {/* Video Container: Dual-video crossfade for seamless, gapless looping */}
+      <div
         onClick={toggleSound}
-        className="order-3 relative my-3 mx-auto w-[calc(100%-2.5rem)] max-w-md aspect-video cursor-pointer rounded-xl border border-primary/35 object-cover shadow-2xl shadow-black/80 sm:order-none sm:my-0 sm:mx-auto sm:w-full sm:h-full sm:size-full sm:max-w-none sm:cursor-default sm:aspect-auto sm:rounded-none sm:border-0 sm:shadow-none sm:absolute sm:inset-0 sm:-z-20 sm:object-contain sm:object-center sm:pointer-events-none transition-opacity duration-700 ease-in-out"
+        className="order-3 relative my-3 mx-auto w-[calc(100%-2.5rem)] max-w-md aspect-video cursor-pointer rounded-xl border border-primary/35 overflow-hidden shadow-2xl shadow-black/80 sm:order-none sm:my-0 sm:mx-auto sm:w-full sm:h-full sm:size-full sm:max-w-none sm:cursor-default sm:aspect-auto sm:rounded-none sm:border-0 sm:shadow-none sm:absolute sm:inset-0 sm:-z-20 sm:pointer-events-none"
       >
-        <source src={mainVideo.url} type="video/mp4" />
-        <source src={mainVideoWebm.url} type="video/webm" />
-      </video>
+        <video
+          ref={video1Ref}
+          autoPlay
+          muted={muted}
+          playsInline
+          preload="auto"
+          poster={mainVideoPoster.url}
+          aria-label="Real Estate Forever introduction film"
+          className="absolute inset-0 size-full w-full h-full object-cover sm:object-contain sm:object-center transition-opacity duration-1000 ease-in-out"
+        >
+          <source src="/videos/main-video.mp4" type="video/mp4" />
+        </video>
+        <video
+          ref={video2Ref}
+          muted={muted}
+          playsInline
+          preload="auto"
+          aria-label="Real Estate Forever introduction film buffer"
+          className="absolute inset-0 size-full w-full h-full object-cover sm:object-contain sm:object-center transition-opacity duration-1000 ease-in-out opacity-0"
+        >
+          <source src="/videos/main-video.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       {/* Section with Login / Leadership Switcher Box */}
       <section className="order-4 flex flex-1 items-center justify-center px-4 py-4 sm:order-none sm:py-8 md:py-10">

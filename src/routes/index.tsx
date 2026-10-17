@@ -32,8 +32,6 @@ import { getVehicleInventory, type Vehicle, type VehicleCategory } from "@/lib/v
 import { AboutImageSlider } from "@/components/about-image-slider";
 import { PropertyGalleryModal } from "@/components/property-gallery-modal";
 import homeMainPoster from "@/assets/home-main-poster.jpg.asset.json";
-import homeMainVideo from "@/assets/home-main-video.mp4.asset.json";
-import homeMainWebm from "@/assets/home-main-video.webm.asset.json";
 import cleanFirstListing from "@/assets/home-listing-01.jpg";
 import clearPhoto05 from "@/assets/property-clear-05.jpg";
 import clearPhoto08 from "@/assets/property-clear-08.jpg";
@@ -203,84 +201,82 @@ export const Route = createFileRoute("/")({
 
 function Homepage() {
   const content = Route.useLoaderData();
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const activeVideoRef = useRef<1 | 2>(1);
+  const crossfadingRef = useRef(false);
   const [search, setSearch] = useState("");
   const [inventoryTab, setInventoryTab] = useState<"all" | "properties" | "vehicles">("all");
   const [vehicleCategory, setVehicleCategory] = useState<"all" | VehicleCategory>("all");
   const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
 
   useEffect(() => {
-    const video = heroVideoRef.current;
-    if (!video) return;
+    const v1 = video1Ref.current;
+    const v2 = video2Ref.current;
+    if (!v1 || !v2) return;
 
-    // Explicitly enforce muted properties on the DOM element so browsers allow autoplay
-    video.defaultMuted = true;
-    video.muted = true;
+    v1.defaultMuted = true;
+    v1.muted = true;
+    v2.defaultMuted = true;
+    v2.muted = true;
 
-    const playVideo = () => {
-      if (video.paused) {
-        const promise = video.play();
-        if (promise !== undefined) {
-          promise.catch(() => {
-            video.defaultMuted = true;
-            video.muted = true;
-            void video.play().catch(() => undefined);
-          });
-        }
+    v1.style.opacity = "1";
+    v2.style.opacity = "0";
+
+    const playActive = () => {
+      const active = activeVideoRef.current === 1 ? v1 : v2;
+      if (active.paused) {
+        active.play().catch(() => undefined);
+      }
+    };
+    playActive();
+
+    // Crossfade 1.0s before end of active video
+    const checkCrossfade = (current: HTMLVideoElement, next: HTMLVideoElement, targetNum: 1 | 2) => {
+      if (!current.duration || Number.isNaN(current.duration)) return;
+      const timeLeft = current.duration - current.currentTime;
+      if (timeLeft <= 1.0 && !crossfadingRef.current) {
+        crossfadingRef.current = true;
+        next.currentTime = 0;
+        void next.play().catch(() => undefined);
+        next.style.opacity = "1";
+        current.style.opacity = "0";
+
+        setTimeout(() => {
+          current.pause();
+          current.currentTime = 0;
+          activeVideoRef.current = targetNum;
+          crossfadingRef.current = false;
+        }, 1000);
       }
     };
 
-    playVideo();
-
-    video.addEventListener("loadedmetadata", playVideo);
-    video.addEventListener("loadeddata", playVideo);
-    video.addEventListener("canplay", playVideo);
-
-    // Seamless loop transition: prevent sudden jump cuts or skips near loop boundary
-    const handleTimeUpdate = () => {
-      if (!video.duration || Number.isNaN(video.duration)) return;
-      const timeLeft = video.duration - video.currentTime;
-      if (timeLeft <= 0.65 && timeLeft > 0) {
-        video.style.opacity = "0.2";
-      } else if (video.currentTime < 0.6) {
-        video.style.opacity = "1";
-      } else if (video.style.opacity !== "1") {
-        video.style.opacity = "1";
-      }
+    const handleTime1 = () => {
+      if (activeVideoRef.current === 1) checkCrossfade(v1, v2, 2);
+    };
+    const handleTime2 = () => {
+      if (activeVideoRef.current === 2) checkCrossfade(v2, v1, 1);
     };
 
-    const handleSeekedOrPlaying = () => {
-      video.style.opacity = "1";
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("seeked", handleSeekedOrPlaying);
-    video.addEventListener("playing", handleSeekedOrPlaying);
+    v1.addEventListener("timeupdate", handleTime1);
+    v2.addEventListener("timeupdate", handleTime2);
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
-        playVideo();
-      }
+      if (document.visibilityState === "visible") playActive();
     };
     document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("focus", playVideo);
+    window.addEventListener("focus", playActive);
 
-    const handleInteraction = () => {
-      playVideo();
-    };
+    const handleInteraction = () => playActive();
     window.addEventListener("pointerdown", handleInteraction, { once: true, passive: true });
     window.addEventListener("touchstart", handleInteraction, { once: true, passive: true });
     window.addEventListener("scroll", handleInteraction, { once: true, passive: true });
 
     return () => {
-      video.removeEventListener("loadedmetadata", playVideo);
-      video.removeEventListener("loadeddata", playVideo);
-      video.removeEventListener("canplay", playVideo);
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("seeked", handleSeekedOrPlaying);
-      video.removeEventListener("playing", handleSeekedOrPlaying);
+      v1.removeEventListener("timeupdate", handleTime1);
+      v2.removeEventListener("timeupdate", handleTime2);
       document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("focus", playVideo);
+      window.removeEventListener("focus", playActive);
       window.removeEventListener("pointerdown", handleInteraction);
       window.removeEventListener("touchstart", handleInteraction);
       window.removeEventListener("scroll", handleInteraction);
@@ -476,18 +472,26 @@ function Homepage() {
         className="relative h-[48vh] sm:h-[52vh] md:h-[calc(100dvh-var(--site-header-height,81px))] w-full overflow-hidden border-t border-border bg-black"
       >
         <video
-          ref={heroVideoRef}
+          ref={video1Ref}
           poster={homeMainPoster.url}
           autoPlay
           muted
-          loop
           playsInline
           preload="auto"
           aria-label="Real Estate Forever main film"
-          className="size-full w-full object-cover object-center pointer-events-none select-none transition-opacity duration-700 ease-in-out"
+          className="absolute inset-0 size-full w-full h-full object-cover object-center pointer-events-none select-none transition-opacity duration-1000 ease-in-out"
         >
-          <source src={homeMainVideo.url} type="video/mp4" />
-          <source src={homeMainWebm.url} type="video/webm" />
+          <source src="/videos/main-video.mp4" type="video/mp4" />
+        </video>
+        <video
+          ref={video2Ref}
+          muted
+          playsInline
+          preload="auto"
+          aria-label="Real Estate Forever main film buffer"
+          className="absolute inset-0 size-full w-full h-full object-cover object-center pointer-events-none select-none transition-opacity duration-1000 ease-in-out opacity-0"
+        >
+          <source src="/videos/main-video.mp4" type="video/mp4" />
         </video>
         {/* Subtle cinematic gold-ambient edge vignette */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
@@ -787,7 +791,7 @@ function Homepage() {
                   <div
                     className="relative aspect-[16/10] luxury-image-frame overflow-hidden cursor-pointer group/img bg-black"
                     onClick={() => openGallery(listing, currentIndex)}
-                    title="Click to view full photo and video gallery"
+                    data-tooltip="Click Here To View"
                   >
                     <span className="lux-curtain" aria-hidden="true" />
                     {isVideo ? (
@@ -808,7 +812,7 @@ function Homepage() {
                       <img
                         src={currentMedia.url}
                         alt={`Property in ${listing.city}, ${listing.state} ${listing.zip}`}
-                        className="size-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                        className="size-full object-cover object-top transition-all duration-500 ease-out group-hover:scale-[1.06] group-hover:brightness-110"
                       />
                     )}
                     {hasMultipleMedia && (
@@ -893,7 +897,7 @@ function Homepage() {
                   <div
                     className="relative aspect-[16/10] luxury-image-frame overflow-hidden cursor-pointer group/img bg-black"
                     onClick={() => openVehicleGallery(v, currentIndex)}
-                    title="Click to view full photo gallery"
+                    data-tooltip="Click Here To View"
                   >
                     <span className="lux-curtain" aria-hidden="true" />
                     {currentMedia?.url ? (
@@ -908,7 +912,7 @@ function Homepage() {
                             e.currentTarget.src = "/vehicles/chevy-suburban-2022-01.png";
                           }
                         }}
-                        className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                        className="size-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.06] group-hover:brightness-110"
                       />
                     ) : (
                       <div className="flex size-full items-center justify-center bg-black/60">

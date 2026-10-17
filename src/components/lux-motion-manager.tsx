@@ -192,9 +192,61 @@ export function LuxMotionManager() {
     let currentTiltCard: HTMLElement | null = null;
     const isPointerFine = window.matchMedia("(hover: hover)").matches;
 
+    // 4b. Custom luxury cursor-following tooltip
+    let tooltipEl = document.getElementById("lux-cursor-tooltip");
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.id = "lux-cursor-tooltip";
+      tooltipEl.className = "lux-cursor-tooltip";
+      document.body.appendChild(tooltipEl);
+    }
+
+    let hoverTooltipTimer: NodeJS.Timeout | null = null;
+    let activeTooltipTarget: HTMLElement | null = null;
+
     const handlePointerMove = (e: MouseEvent) => {
       if (!isPointerFine) return;
       const target = e.target as HTMLElement | null;
+
+      // Handle custom mouse tooltip
+      const tooltipTarget = target?.closest<HTMLElement>("[data-tooltip]");
+      if (tooltipTarget) {
+        const text = tooltipTarget.getAttribute("data-tooltip") || "Click Here To View";
+        if (tooltipEl.textContent !== text) {
+          tooltipEl.textContent = text;
+        }
+
+        // Clamp tooltip coordinates STRICTLY inside the image box boundary (never outside the box)
+        const rect = tooltipTarget.getBoundingClientRect();
+        const width = tooltipEl.offsetWidth || 135;
+        const height = tooltipEl.offsetHeight || 28;
+
+        const clampedX = Math.max(rect.left + 8, Math.min(e.clientX + 10, rect.right - width - 8));
+        const clampedY = Math.max(rect.top + 8, Math.min(e.clientY + 10, rect.bottom - height - 8));
+
+        tooltipEl.style.setProperty("--tooltip-x", `${clampedX}px`);
+        tooltipEl.style.setProperty("--tooltip-y", `${clampedY}px`);
+
+        if (activeTooltipTarget !== tooltipTarget) {
+          activeTooltipTarget = tooltipTarget;
+          tooltipEl.classList.remove("is-visible");
+          if (hoverTooltipTimer) clearTimeout(hoverTooltipTimer);
+          // Wait 4 seconds (as requested by user) before revealing
+          hoverTooltipTimer = setTimeout(() => {
+            if (activeTooltipTarget === tooltipTarget) {
+              tooltipEl.classList.add("is-visible");
+            }
+          }, 4000);
+        }
+      } else {
+        if (hoverTooltipTimer) {
+          clearTimeout(hoverTooltipTimer);
+          hoverTooltipTimer = null;
+        }
+        activeTooltipTarget = null;
+        tooltipEl.classList.remove("is-visible");
+      }
+
       const card = target?.closest<HTMLElement>("[data-lux-card], .luxury-card-depth");
 
       if (!card) {
@@ -241,6 +293,12 @@ export function LuxMotionManager() {
     };
 
     const handlePointerLeave = () => {
+      if (hoverTooltipTimer) {
+        clearTimeout(hoverTooltipTimer);
+        hoverTooltipTimer = null;
+      }
+      activeTooltipTarget = null;
+      tooltipEl.classList.remove("is-visible");
       if (currentTiltCard) {
         gsap.to(currentTiltCard, {
           rotateX: 0,
@@ -283,6 +341,7 @@ export function LuxMotionManager() {
 
     return () => {
       clearTimeout(initialTimer);
+      if (hoverTooltipTimer) clearTimeout(hoverTooltipTimer);
       if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
       mutationObserver.disconnect();
       intersectionObserver.disconnect();

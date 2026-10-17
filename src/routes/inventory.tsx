@@ -276,7 +276,7 @@ function InventoryPage() {
                 <article key={item.key} ref={(el) => { if (el) cardRefs.current.set(item.key, el); else cardRefs.current.delete(item.key); }} data-lux-card className={`group relative min-w-0 cursor-pointer rounded-md overflow-hidden ${selectedKey === item.key ? "border border-primary bg-primary/15 shadow-[0_0_24px_rgba(190,149,67,0.35)]" : "luxury-card-depth"}`} role="button" tabIndex={0} aria-label={`Select ${item.listing.city}, ${item.listing.state} property`} aria-pressed={selectedKey === item.key} onClick={() => setSelectedKey(item.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedKey(item.key); } }}>
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
-                  <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-black group/img">
+                  <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-black group/img" data-tooltip="Click Here To View">
                     <span className="lux-curtain" aria-hidden="true" />
                     {isVideo ? (
                       <video
@@ -291,7 +291,7 @@ function InventoryPage() {
                         onContextMenu={(e) => e.preventDefault()}
                       />
                     ) : (
-                      <img src={currentMedia.url} alt={`${item.listing.city}, ${item.listing.state} property`} loading="lazy" className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
+                      <img src={currentMedia.url} alt={`${item.listing.city}, ${item.listing.state} property`} loading="lazy" className="size-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.05] group-hover:brightness-110" />
                     )}
                     <span className="absolute left-3 top-3 border border-primary/50 bg-background/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">{item.listing.type}</span>
                     {item.listing.isNew && <span className="absolute top-3 right-3 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">New</span>}
@@ -357,7 +357,7 @@ function InventoryPage() {
                 >
                   <span className="gold-box-border" aria-hidden="true" />
                   <span className="gold-pulse-line" aria-hidden="true" />
-                  <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-muted group/img">
+                  <div className="relative aspect-[16/9] luxury-image-frame overflow-hidden bg-muted group/img" data-tooltip="Click Here To View">
                     <span className="lux-curtain" aria-hidden="true" />
                     {currentMedia?.url ? (
                       <img
@@ -371,7 +371,7 @@ function InventoryPage() {
                             e.currentTarget.src = "/vehicles/chevy-suburban-2022-01.png";
                           }
                         }}
-                        className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                        className="size-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.05] group-hover:brightness-110"
                       />
                     ) : (
                       <div className="flex size-full items-center justify-center">
