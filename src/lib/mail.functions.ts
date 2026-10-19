@@ -235,7 +235,7 @@ export const sendFormEmail = createServerFn({ method: "POST" })
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Real Estate Forever <contact@realestateforever.com>",
+            from: "Real Estate Forever <info@realestateforever.com>",
             to: [TO],
             reply_to: data.email || undefined,
             subject: subjectLine,
